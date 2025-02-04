@@ -15,7 +15,7 @@
 #define __ERROR_CODE_OPEN_DAT_FILE_FAILED	2	// 打开Dat文件失败
 #define __ERROR_CODE_CREATE_SERVER_FAILED	3	// 创建Server失败
 
-// struct Server_Data 
+// struct Server_Data
 // {
 // 	char szFindFlags[20];
 //     char szHost[128];//地址
@@ -30,62 +30,62 @@
 // 	bool Run;///启动项
 // };
 
-class CBulidServer  
+class CBulidServer
 {
 public:
-	CBulidServer();
-	virtual ~CBulidServer();
+    CBulidServer();
+    virtual ~CBulidServer();
 
 public:
-	// 创建客户
-	// pStructPointer 结构体指针
-	// iStructPointerSize 结构体大小
-	// strDatFilePath Dat文件路径
-	// strBulidSavePath 保存路径
-	// 成功返回TRUE,否则失败,并会设置错误信息
-	BOOL BulidServer(PVOID pStructPointer, INT iStructPointerSize, PCTSTR strDatFilePath, PCTSTR strBulidSavePath);
+    // 创建客户
+    // pStructPointer 结构体指针
+    // iStructPointerSize 结构体大小
+    // strDatFilePath Dat文件路径
+    // strBulidSavePath 保存路径
+    // 成功返回TRUE,否则失败,并会设置错误信息
+    BOOL BulidServer(PVOID pStructPointer, INT iStructPointerSize, PCTSTR strDatFilePath, PCTSTR strBulidSavePath);
 
-	// 获取错误代码具体信息
-	// 返回具体错误信息字符串
-	PCTSTR GetErrorCodeInfo(void);
-
-private:
-	// 错误代码
-	DWORD m_dwErrorCode;
+    // 获取错误代码具体信息
+    // 返回具体错误信息字符串
+    PCTSTR GetErrorCodeInfo(void);
 
 private:
-	// 设置错误代码
-	// dwErrorCode 错误代码
-	void SetErrorCode(DWORD dwErrorCode);
+    // 错误代码
+    DWORD m_dwErrorCode;
 
-	// 判断Dat文件是否存在
-	// strDatPath Dat文件路径
-	// 成功返回TRUE,否则失败,并会设置错误信息
-	BOOL IsDatFile(PCTSTR strDatPath);
+private:
+    // 设置错误代码
+    // dwErrorCode 错误代码
+    void SetErrorCode(DWORD dwErrorCode);
 
-	// 读取Dat数据到Buffer
-	// strDatPath Dat文件路径
-	// pBuffer 入参,Buffer指针
-	// dwBufferSize 入参,Buffer数据大小
-	// 成功返回TRUE,否则失败,并会设置错误信息
-	BOOL ReadDatDataToBuffer(PCTSTR strDatPath, PCHAR &pBuffer, DWORD &dwBufferSize);
+    // 判断Dat文件是否存在
+    // strDatPath Dat文件路径
+    // 成功返回TRUE,否则失败,并会设置错误信息
+    BOOL IsDatFile(PCTSTR strDatPath);
 
-	// 创建Server
-	// pStructPointer 结构体指针
-	// iStructPointerSize 结构体大小
-	// strBulidSavePath 保存路径
-	// pDatBuffer Dat文件数据Buffer
-	// dwDatBufferSize Dat文件数据大小
-	// 成功返回TRUE,否则失败,并会设置错误信息
-	BOOL CreateServer(PVOID pStructPointer, INT iStructPointerSize, PCTSTR strBulidSavePath, PCHAR &pDatBuffer, DWORD &dwDatBufferSize);
+    // 读取Dat数据到Buffer
+    // strDatPath Dat文件路径
+    // pBuffer 入参,Buffer指针
+    // dwBufferSize 入参,Buffer数据大小
+    // 成功返回TRUE,否则失败,并会设置错误信息
+    BOOL ReadDatDataToBuffer(PCTSTR strDatPath, PCHAR &pBuffer, DWORD &dwBufferSize);
 
-	// 查找结构体数据位置偏移(在Dat文件中的位置偏移)
-	// pStructPointer 结构体指针
-	// iStructPointerSize 结构体大小
-	// pDatBuffer Dat文件数据Buffer
-	// dwDatBufferSize Dat文件数据大小
-	// 成功返回非0,否则失败,并会设置错误信息
-	UINT FindStructDataOffset(PVOID pStructPointer, INT iStructPointerSize, PCHAR &pDatBuffer, DWORD &dwDatBufferSize);
+    // 创建Server
+    // pStructPointer 结构体指针
+    // iStructPointerSize 结构体大小
+    // strBulidSavePath 保存路径
+    // pDatBuffer Dat文件数据Buffer
+    // dwDatBufferSize Dat文件数据大小
+    // 成功返回TRUE,否则失败,并会设置错误信息
+    BOOL CreateServer(PVOID pStructPointer, INT iStructPointerSize, PCTSTR strBulidSavePath, PCHAR &pDatBuffer, DWORD &dwDatBufferSize);
+
+    // 查找结构体数据位置偏移(在Dat文件中的位置偏移)
+    // pStructPointer 结构体指针
+    // iStructPointerSize 结构体大小
+    // pDatBuffer Dat文件数据Buffer
+    // dwDatBufferSize Dat文件数据大小
+    // 成功返回非0,否则失败,并会设置错误信息
+    UINT FindStructDataOffset(PVOID pStructPointer, INT iStructPointerSize, PCHAR &pDatBuffer, DWORD &dwDatBufferSize);
 };
 
 #endif // !defined(AFX_BULIDSERVER_H__2C3F832E_E520_4211_B829_90C35C7C6D03__INCLUDED_)

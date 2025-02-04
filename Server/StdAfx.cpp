@@ -3,10 +3,3 @@
 //	stdafx.obj will contain the pre-compiled type information
 
 #include "stdafx.h"
-
-
-UINT    nConnect;
-LPCTSTR	lpConnects[2];  //上线域名
-DWORD   szdwPort[2];     //上线端口
-// TODO: reference any additional headers you need in STDAFX.H
-// and not in this file

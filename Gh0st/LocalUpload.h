@@ -14,34 +14,34 @@ class CLocalUpload : public CDialog
 {
 // Construction
 public:
-	CLocalUpload(CWnd* pParent = NULL);   // standard constructor
+    CLocalUpload(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CLocalUpload)
-	enum { IDD = IDD_DIALOG_UPLOAD };
-	CComboBox	m_combo_type;
-	CString	m_edit_path;
-	CString	m_edit_cmd_line;
-	//}}AFX_DATA
+    //{{AFX_DATA(CLocalUpload)
+    enum { IDD = IDD_DIALOG_UPLOAD };
+    CComboBox	m_combo_type;
+    CString	m_edit_path;
+    CString	m_edit_cmd_line;
+    //}}AFX_DATA
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CLocalUpload)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CLocalUpload)
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
     UINT m_type;
-	// Generated message map functions
-	//{{AFX_MSG(CLocalUpload)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnButtonPath();
-	virtual void OnOK();
-	afx_msg void OnSelchangeComboType();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    // Generated message map functions
+    //{{AFX_MSG(CLocalUpload)
+    virtual BOOL OnInitDialog();
+    afx_msg void OnButtonPath();
+    virtual void OnOK();
+    afx_msg void OnSelchangeComboType();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

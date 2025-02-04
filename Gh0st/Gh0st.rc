@@ -547,7 +547,7 @@ BEGIN
     POPUP "生成/退出(&D)"
     BEGIN
         MENUITEM "生成服务(&B)",                    ID_MENUITEM_BUILD
-        MENUITEM "退出程序(&X)",                    ID_APP_EXIT
+        MENUITEM "退出程序(&X)",                    ID_QUIT_APP
     END
     POPUP "功能/工具(&S)"
     BEGIN
@@ -572,7 +572,7 @@ BEGIN
     BEGIN
         MENUITEM "显示",                          ID_MENUITEM_SHOW
         MENUITEM "隐藏",                          ID_MENUITEM_HIDE
-        MENUITEM "退出",                          ID_APP_EXIT
+        MENUITEM "退出",                          ID_QUIT_APP
     END
 END
 
@@ -1371,13 +1371,13 @@ BEGIN
     LTEXT           "天气",IDC_TIANQI,113,7,72,8,NOT WS_VISIBLE
     CTEXT           "未知城市",IDC_CITY,620,5,69,12
     LTEXT           "未获取当前日期及温度",IDC_WENDU,620,23,95,8
-    ICON            IDI_DAY_qing,IDC_DAY,41,8,21,21,SS_REALSIZEIMAGE | NOT WS_VISIBLE
-    ICON            IDI_NIGHT_qing,IDC_NIGHT,76,8,21,21,SS_REALSIZEIMAGE | NOT WS_VISIBLE
+    ICON            IDI_DAY_qing,IDC_DAY,41,8,20,20,SS_REALSIZEIMAGE | NOT WS_VISIBLE
+    ICON            IDI_NIGHT_qing,IDC_NIGHT,76,8,20,20,SS_REALSIZEIMAGE | NOT WS_VISIBLE
     CONTROL         "",IDC_GUNDON,"Static",SS_LEFTNOWORDWRAP | NOT WS_VISIBLE | WS_GROUP,9,11,21,21
-    ICON            466,IDC_STATIC,6,8,21,21,SS_REALSIZEIMAGE | NOT WS_VISIBLE
+    ICON            466,IDC_STATIC,6,8,20,20,SS_REALSIZEIMAGE | NOT WS_VISIBLE
     LTEXT           "",IDC_GUNDONGWEB,138,9,8,8,NOT WS_VISIBLE
     CONTROL         "",IDC_GIFFIRST,"Static",SS_BLACKRECT | NOT WS_VISIBLE,239,7,1,1
-    EDITTEXT        IDC_EDIT1,220,2,261,35,ES_CENTER | ES_AUTOHSCROLL | WS_DISABLED | NOT WS_BORDER,WS_EX_DLGMODALFRAME
+    EDITTEXT        IDC_EDIT1,231,2,261,35,ES_CENTER | ES_AUTOHSCROLL | WS_DISABLED | NOT WS_BORDER,WS_EX_DLGMODALFRAME
     LTEXT           "User Name:",IDC_STATIC,498,6,43,12,WS_TABSTOP
     LTEXT           "administrator",IDC_User,546,6,52,12
     LTEXT           "Memmory  :",IDC_STATIC,498,23,42,12
@@ -1943,6 +1943,21 @@ END
 STRINGTABLE
 BEGIN
     ID_SEARCH_SUBFOLDER     "搜索子文件夹"
+END
+
+STRINGTABLE
+BEGIN
+    ID_QUIT_APP             "退出应用程序\n退出"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_TOOLS               "实用工具"
+END
+
+STRINGTABLE
+BEGIN
+    ID_MENUITEM_UPDATE_IP   "域名更新"
 END
 
 #endif    // 中文(简体，中国) resources

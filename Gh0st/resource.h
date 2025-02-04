@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by Gh0st.rc
+// Microsoft Visual C++ 生成的包含文件。
+// 供 Gh0st.rc 使用
 //
 #define IDD_ABOUTBOX                    100
 #define IDD_DIALOG_CREATE               102
@@ -793,6 +793,7 @@
 #define IDM_TOOLS                       32905
 #define IDM_CHAT                        32906
 #define IDM_SETCOLOR                    32907
+#define ID_QUIT_APP                    32913
 #define IDM_EVENT_SAVE                  32959
 #define IDM_EVENT_DELETE                32960
 #define IDM_ALL_DELETE                  32961
@@ -800,12 +801,12 @@
 #define ID_STAUTJSPEED                  59395
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        285
-#define _APS_NEXT_COMMAND_VALUE         32913
+#define _APS_NEXT_COMMAND_VALUE         32914
 #define _APS_NEXT_CONTROL_VALUE         1164
 #define _APS_NEXT_SYMED_VALUE           111
 #endif

@@ -10,16 +10,16 @@
 // All rights reserved
 //
 // This is free software.
-// This code may be used in compiled form in any way you desire. This  
-// file may be redistributed unmodified by any means PROVIDING it is   
-// not sold for profit without the authors written consent, and   
-// providing that this notice and the authors name and all copyright   
-// notices remains intact. If the source code in this file is used in   
-// any  commercial application then a statement along the lines of   
-// "Portions Copyright © 2000 Michel Wassink" must be included in   
-// the startup banner, "About" box or printed documentation. An email   
-// letting me know that you are using it would be nice as well. That's   
-// not much to ask considering the amount of work that went into this.  
+// This code may be used in compiled form in any way you desire. This
+// file may be redistributed unmodified by any means PROVIDING it is
+// not sold for profit without the authors written consent, and
+// providing that this notice and the authors name and all copyright
+// notices remains intact. If the source code in this file is used in
+// any  commercial application then a statement along the lines of
+// "Portions Copyright © 2000 Michel Wassink" must be included in
+// the startup banner, "About" box or printed documentation. An email
+// letting me know that you are using it would be nice as well. That's
+// not much to ask considering the amount of work that went into this.
 //
 // No warrantee of any kind, expressed or implied, is included with this
 // software; use at your own risk, responsibility for damages (if any) to
@@ -54,31 +54,45 @@
 class CDoubleRect
 {
 public:
-	void SetRect(double x1, double y1, double x2, double y2)
-	{ left = x1; top = y1; right = x2; bottom = y2;}
-	double Width() const{return right - left;}
-	double Height() const{return bottom - top;}
-	void SetRectEmpty(){left = top = right = bottom = 0.0;}
+    void SetRect(double x1, double y1, double x2, double y2)
+    {
+        left = x1;
+        top = y1;
+        right = x2;
+        bottom = y2;
+    }
+    double Width() const
+    {
+        return right - left;
+    }
+    double Height() const
+    {
+        return bottom - top;
+    }
+    void SetRectEmpty()
+    {
+        left = top = right = bottom = 0.0;
+    }
 public:
-	double left, top, right, bottom; 
+    double left, top, right, bottom;
 };
 
 class CDSegment
 {
 public:
-	CDSegment();
-	CDSegment(const CDSegment& Segment);
-	~CDSegment();
-	void DefPoints(const POINT* lpPoints, const BYTE* lpTypes, int nCount);
-	void Draw(CDC *pDC, CDoubleRect DrawPlace, int iWidth) const;
-	void FreeSegment();
-	CDSegment operator=(const CDSegment &Segment);
+    CDSegment();
+    CDSegment(const CDSegment& Segment);
+    ~CDSegment();
+    void DefPoints(const POINT* lpPoints, const BYTE* lpTypes, int nCount);
+    void Draw(CDC *pDC, CDoubleRect DrawPlace, int iWidth) const;
+    void FreeSegment();
+    CDSegment operator=(const CDSegment &Segment);
 
 // Implementation
 public:
-	CPoint	  *	m_paPoints;			// array with point
-	BYTE	  *	m_paTypes;			// array with connecting info for point
-	int			m_nCount;			// number of points
+    CPoint	  *	m_paPoints;			// array with point
+    BYTE	  *	m_paTypes;			// array with connecting info for point
+    int			m_nCount;			// number of points
 };
 
 typedef CArray< CDSegment, CDSegment> DSegmentArray;
@@ -87,26 +101,29 @@ class CDigiChar
 {
 // Construction
 public:
-	CDigiChar();
-	CDigiChar(const CDigiChar& DigiChar);
+    CDigiChar();
+    CDigiChar(const CDigiChar& DigiChar);
 
 //Attributes:
 public:
-	virtual void SetElementData(WORD wSegmData, int iDispStyle);
-	void	Draw(CDC *pDC, CDoubleRect DrawPlace, CPen *pOffPen, CPen *pOnPen,
-				CBrush *pOffBrush, CBrush *pOnBrush);
-	void SetColor(COLORREF OffColor, COLORREF OnColor);
-	int GetNormWidth() const;
-	CDigiChar operator=(const CDigiChar &DigiChar);
-	COLORREF GetColor(void) const { return m_OnColor; }
+    virtual void SetElementData(WORD wSegmData, int iDispStyle);
+    void	Draw(CDC *pDC, CDoubleRect DrawPlace, CPen *pOffPen, CPen *pOnPen,
+               CBrush *pOffBrush, CBrush *pOnBrush);
+    void SetColor(COLORREF OffColor, COLORREF OnColor);
+    int GetNormWidth() const;
+    CDigiChar operator=(const CDigiChar &DigiChar);
+    COLORREF GetColor(void) const
+    {
+        return m_OnColor;
+    }
 
 protected:
-	int				m_Width;		// Width of character
-	WORD			m_wSegmData;	// segments to highlight (binairy encoded)
-	DSegmentArray	m_SegmentArray;	// Character is array of segments
-	int				m_NSegments;	// Number of segments
-	COLORREF		m_OffColor;		// Color of segment when off
-	COLORREF		m_OnColor;		// Color of segment when on
+    int				m_Width;		// Width of character
+    WORD			m_wSegmData;	// segments to highlight (binairy encoded)
+    DSegmentArray	m_SegmentArray;	// Character is array of segments
+    int				m_NSegments;	// Number of segments
+    COLORREF		m_OffColor;		// Color of segment when off
+    COLORREF		m_OnColor;		// Color of segment when on
 };
 
 typedef CArray<CDigiChar, CDigiChar> DigiCharArray;
@@ -118,55 +135,61 @@ class CDigiStatic : public CStatic
 {
 // Construction
 public:
-	CDigiStatic();
+    CDigiStatic();
 
 // Attributes
 public:
-	enum {
-		DS_SMOOTH	= 1,	// Pioneer kind of characters
-		DS_STYLE14	= 2,	// use allways 14 segment display.
-		DS_SZ_PROP	= 4		// size proportional
-	};
+    enum {
+        DS_SMOOTH	= 1,	// Pioneer kind of characters
+        DS_STYLE14	= 2,	// use allways 14 segment display.
+        DS_SZ_PROP	= 4		// size proportional
+    };
 
 // Operations
 public:
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDigiStatic)
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CDigiStatic)
+    //}}AFX_VIRTUAL
 
 // Implementation
 public:
-	virtual		~CDigiStatic();
-	void		SetText(LPCTSTR lpszText);
-	void		Format(LPCTSTR lpszFormat, ...);
-	void		SetColor(COLORREF OffColor, COLORREF OnColor);
-	COLORREF	GetOnColor() const {return m_OnColor;};
-	COLORREF	GetOffColor() const {return m_OffColor;};
-	void		SetDrawImmediately(BOOL Enable = TRUE);
-	COLORREF	SetBkColor(COLORREF BackColor = BLACK);
-	BOOL		ModifyDigiStyle(DWORD dwRemove, DWORD dwAdd);
+    virtual		~CDigiStatic();
+    void		SetText(LPCTSTR lpszText);
+    void		Format(LPCTSTR lpszFormat, ...);
+    void		SetColor(COLORREF OffColor, COLORREF OnColor);
+    COLORREF	GetOnColor() const
+    {
+        return m_OnColor;
+    };
+    COLORREF	GetOffColor() const
+    {
+        return m_OffColor;
+    };
+    void		SetDrawImmediately(BOOL Enable = TRUE);
+    COLORREF	SetBkColor(COLORREF BackColor = BLACK);
+    BOOL		ModifyDigiStyle(DWORD dwRemove, DWORD dwAdd);
 
-	// Generated message map functions
+    // Generated message map functions
 protected:
-	CDigiChar * DefineChar(TCHAR cChar);
-	void		BuildString();
+    CDigiChar * DefineChar(TCHAR cChar);
+    void		BuildString();
 
-	CString			m_strText;			// Current text
-	BOOL			m_Modified;			// text is dirty
-	DigiCharArray	m_CharArray;		// digistatic is an array of characters
-	COLORREF		m_OffColor;			// Color of segment when off
-	COLORREF		m_OnColor;			// Color of segment when on
-	COLORREF		m_BackColor;		// Background color
-	DWORD			m_DispStyle;		// DS_... may be bitwise OR-red
-	BOOL			m_bImmediateUpdate;	// Enable/Disable immediate repaint
-	//{{AFX_MSG(CDigiStatic)
-	afx_msg void OnPaint();
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	//}}AFX_MSG
+    CString			m_strText;			// Current text
+    BOOL			m_Modified;			// text is dirty
+    DigiCharArray	m_CharArray;		// digistatic is an array of characters
+    COLORREF		m_OffColor;			// Color of segment when off
+    COLORREF		m_OnColor;			// Color of segment when on
+    COLORREF		m_BackColor;		// Background color
+    DWORD			m_DispStyle;		// DS_... may be bitwise OR-red
+    BOOL			m_bImmediateUpdate;	// Enable/Disable immediate repaint
+    //{{AFX_MSG(CDigiStatic)
+    afx_msg void OnPaint();
+    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+    //}}AFX_MSG
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////

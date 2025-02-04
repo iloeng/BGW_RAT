@@ -14,31 +14,31 @@ class CChangeGroupDlg : public CDialog
 {
 // Construction
 public:
-	CChangeGroupDlg(CWnd* pParent = NULL);   // standard constructor
+    CChangeGroupDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CChangeGroupDlg)
-	enum { IDD = IDD_DIALOG_CHANGE_GROUP };
-	CXTPComboBox	m_combo_group;
-	//}}AFX_DATA
+    //{{AFX_DATA(CChangeGroupDlg)
+    enum { IDD = IDD_DIALOG_CHANGE_GROUP };
+    CXTPComboBox	m_combo_group;
+    //}}AFX_DATA
 
-	CString strGroup;
+    CString strGroup;
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CChangeGroupDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CChangeGroupDlg)
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CChangeGroupDlg)
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    // Generated message map functions
+    //{{AFX_MSG(CChangeGroupDlg)
+    virtual BOOL OnInitDialog();
+    virtual void OnOK();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

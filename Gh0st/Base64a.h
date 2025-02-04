@@ -14,7 +14,7 @@ class Base64a
 {
 // Construction
 public:
-	Base64a();
+    Base64a();
 
 // Attributes
 public:
@@ -23,21 +23,21 @@ public:
 public:
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(Base64a)
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(Base64a)
+    //}}AFX_VIRTUAL
 
 // Implementation
 public:
-	virtual ~Base64a();
+    virtual ~Base64a();
 
-	// Generated message map functions
+    // Generated message map functions
 protected:
-	//{{AFX_MSG(Base64a)
-		// NOTE - the ClassWizard will add and remove member functions here.
-	//}}AFX_MSG
-	CString Base64Encode(LPCTSTR lpszSrc);   //加密函数
-	CString Base64Decode(LPCTSTR lpszSrc);  //解密函数
+    //{{AFX_MSG(Base64a)
+    // NOTE - the ClassWizard will add and remove member functions here.
+    //}}AFX_MSG
+    CString Base64Encode(LPCTSTR lpszSrc);   //加密函数
+    CString Base64Decode(LPCTSTR lpszSrc);  //解密函数
 
 };
 

@@ -13,49 +13,49 @@
 class CLogView : public CListView
 {
 protected:
-	CLogView();           // protected constructor used by dynamic creation
-	DECLARE_DYNCREATE(CLogView)
+    CLogView();           // protected constructor used by dynamic creation
+    DECLARE_DYNCREATE(CLogView)
 
 // Attributes
 public:
 
 // Operations
 public:
-	void InsertLogItem(LPCTSTR Text,int Mode, int Flag);
+    void InsertLogItem(LPCTSTR Text,int Mode, int Flag);
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CLogView)
-	public:
-	virtual void OnInitialUpdate();
-	protected:
-	virtual void OnDraw(CDC* pDC);      // overridden to draw this view
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CLogView)
+public:
+    virtual void OnInitialUpdate();
+protected:
+    virtual void OnDraw(CDC* pDC);      // overridden to draw this view
+    virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	CXTHeaderCtrl   m_heades;
-	virtual ~CLogView();
+    CXTHeaderCtrl   m_heades;
+    virtual ~CLogView();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+    virtual void AssertValid() const;
+    virtual void Dump(CDumpContext& dc) const;
 #endif
 
-	// Generated message map functions
+    // Generated message map functions
 protected:
-	//{{AFX_MSG(CLogView)
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnRclick(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnEventDelete();
-	afx_msg void OnAllDelete();
-	afx_msg void OnEventSave();
-	afx_msg void OnEventCopy();
-	afx_msg void g_ColumnWidth();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    //{{AFX_MSG(CLogView)
+    afx_msg void OnSize(UINT nType, int cx, int cy);
+    afx_msg void OnRclick(NMHDR* pNMHDR, LRESULT* pResult);
+    afx_msg void OnEventDelete();
+    afx_msg void OnAllDelete();
+    afx_msg void OnEventSave();
+    afx_msg void OnEventCopy();
+    afx_msg void g_ColumnWidth();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 private:
-	CListCtrl* m_pLogList;
-	CImageList I_LogList;
+    CListCtrl* m_pLogList;
+    CImageList I_LogList;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -18,10 +18,10 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNCREATE(CGh0stDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CGh0stDoc, CDocument)
-	//{{AFX_MSG_MAP(CGh0stDoc)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
-	//}}AFX_MSG_MAP
+    //{{AFX_MSG_MAP(CGh0stDoc)
+    // NOTE - the ClassWizard will add and remove mapping macros here.
+    //    DO NOT EDIT what you see in these blocks of generated code!
+    //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ END_MESSAGE_MAP()
 
 CGh0stDoc::CGh0stDoc()
 {
-	// TODO: add one-time construction code here
+    // TODO: add one-time construction code here
 
 }
 
@@ -39,13 +39,13 @@ CGh0stDoc::~CGh0stDoc()
 
 BOOL CGh0stDoc::OnNewDocument()
 {
-	if (!CDocument::OnNewDocument())
-		return FALSE;
-	
-	// TODO: add reinitialization code here
-	// (SDI documents will reuse this document)
-	
-	return TRUE;
+    if (!CDocument::OnNewDocument())
+        return FALSE;
+
+    // TODO: add reinitialization code here
+    // (SDI documents will reuse this document)
+
+    return TRUE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -53,14 +53,11 @@ BOOL CGh0stDoc::OnNewDocument()
 
 void CGh0stDoc::Serialize(CArchive& ar)
 {
-	if (ar.IsStoring())
-	{
-		// TODO: add storing code here
-	}
-	else
-	{
-		// TODO: add loading code here
-	}
+    if (ar.IsStoring()) {
+        // TODO: add storing code here
+    } else {
+        // TODO: add loading code here
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,12 +66,12 @@ void CGh0stDoc::Serialize(CArchive& ar)
 #ifdef _DEBUG
 void CGh0stDoc::AssertValid() const
 {
-	CDocument::AssertValid();
+    CDocument::AssertValid();
 }
 
 void CGh0stDoc::Dump(CDumpContext& dc) const
 {
-	CDocument::Dump(dc);
+    CDocument::Dump(dc);
 }
 #endif //_DEBUG
 

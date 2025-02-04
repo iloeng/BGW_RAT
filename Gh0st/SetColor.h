@@ -14,38 +14,38 @@ class CSetColor : public CDialog
 {
 // Construction
 public:
-	CSetColor(CWnd* pParent = NULL);   // standard constructor
+    CSetColor(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CSetColor)
-	enum { IDD = IDD_COLOR };
-	CXTPButton	m_BsendXtp;
-	CXTPButton	m_Canxtp;
-	CXTPComboBox	m_ComBox_Color;
-	//}}AFX_DATA
+    //{{AFX_DATA(CSetColor)
+    enum { IDD = IDD_COLOR };
+    CXTPButton	m_BsendXtp;
+    CXTPButton	m_Canxtp;
+    CXTPComboBox	m_ComBox_Color;
+    //}}AFX_DATA
 
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CSetColor)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CSetColor)
+public:
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CSetColor)
-	afx_msg void OnBSend();
-	afx_msg void OnBcancel();
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    // Generated message map functions
+    //{{AFX_MSG(CSetColor)
+    afx_msg void OnBSend();
+    afx_msg void OnBcancel();
+    virtual BOOL OnInitDialog();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 public:
-	int nSecletIndex;
+    int nSecletIndex;
 };
 
 //{{AFX_INSERT_LOCATION}}

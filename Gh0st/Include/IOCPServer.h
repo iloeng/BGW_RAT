@@ -31,87 +31,86 @@
 class CLock
 {
 public:
-	CLock(CRITICAL_SECTION& cs, const CString& strFunc)
-	{
-		m_strFunc = strFunc;
-		m_pcs = &cs;
-		Lock();
-	}
-	~CLock()
-	{
-		Unlock();
+    CLock(CRITICAL_SECTION& cs, const CString& strFunc)
+    {
+        m_strFunc = strFunc;
+        m_pcs = &cs;
+        Lock();
+    }
+    ~CLock()
+    {
+        Unlock();
 
-	}
-	
-	void Unlock()
-	{
-		LeaveCriticalSection(m_pcs);
-		TRACE(_T("LC %d %s\n") , GetCurrentThreadId() , m_strFunc);
-	}
+    }
 
-	void Lock()
-	{
-		TRACE(_T("EC %d %s\n") , GetCurrentThreadId(), m_strFunc);
-		EnterCriticalSection(m_pcs);
-	}
- 
+    void Unlock()
+    {
+        LeaveCriticalSection(m_pcs);
+        TRACE(_T("LC %d %s\n"), GetCurrentThreadId(), m_strFunc);
+    }
+
+    void Lock()
+    {
+        TRACE(_T("EC %d %s\n"), GetCurrentThreadId(), m_strFunc);
+        EnterCriticalSection(m_pcs);
+    }
+
 
 protected:
-	CRITICAL_SECTION*	m_pcs;
-	CString				m_strFunc;
+    CRITICAL_SECTION*	m_pcs;
+    CString				m_strFunc;
 
 };
 
-enum IOType 
-{
-	IOInitialize,
-	IORead,
-	IOWrite
+enum IOType {
+    IOInitialize,
+    IORead,
+    IOWrite
 };
 
 
-class OVERLAPPEDPLUS 
+class OVERLAPPEDPLUS
 {
 public:
-	OVERLAPPED			m_ol;
-	IOType				m_ioType;
+    OVERLAPPED			m_ol;
+    IOType				m_ioType;
 
-	OVERLAPPEDPLUS(IOType ioType) {
-		ZeroMemory(this, sizeof(OVERLAPPEDPLUS));
-		m_ioType = ioType;
-	}
+    OVERLAPPEDPLUS(IOType ioType)
+    {
+        ZeroMemory(this, sizeof(OVERLAPPEDPLUS));
+        m_ioType = ioType;
+    }
 };
 
 
-struct ClientContext
-{
+struct ClientContext {
     SOCKET				m_Socket;
-	// Store buffers
-	CBuffer				m_WriteBuffer;
-	CBuffer				m_CompressionBuffer;	// 接收到的压缩的数据
-	CBuffer				m_DeCompressionBuffer;	// 解压后的数据
-	CBuffer				m_ResendWriteBuffer;	// 上次发送的数据包，接收失败时重发时用
+    // Store buffers
+    CBuffer				m_WriteBuffer;
+    CBuffer				m_CompressionBuffer;	// 接收到的压缩的数据
+    CBuffer				m_DeCompressionBuffer;	// 解压后的数据
+    CBuffer				m_ResendWriteBuffer;	// 上次发送的数据包，接收失败时重发时用
 
-	int					m_Dialog[2]; // 放对话框列表用，第一个int是类型，第二个是CDialog的地址
-	int					m_nTransferProgress;
+    int					m_Dialog[2]; // 放对话框列表用，第一个int是类型，第二个是CDialog的地址
+    int					m_nTransferProgress;
 
-	// Input Elements for Winsock
-	WSABUF				m_wsaInBuffer;
-	BYTE				m_byInBuffer[8192];
+    // Input Elements for Winsock
+    WSABUF				m_wsaInBuffer;
+    BYTE				m_byInBuffer[8192];
 
-	// Output elements for Winsock
-	WSABUF				m_wsaOutBuffer;
+    // Output elements for Winsock
+    WSABUF				m_wsaOutBuffer;
 //	HANDLE				m_hWriteComplete;
 
-	BOOL				m_bIsMainSocket; // 是不是主socket
+    BOOL				m_bIsMainSocket; // 是不是主socket
 
-	CRITICAL_SECTION m_SndLock;
-	// 上线密码
-	char szOnlinePass[20];
+    CRITICAL_SECTION m_SndLock;
+    // 上线密码
+    char szOnlinePass[20];
 
-	// 代理映射用到
-	DWORD				dwID;
-	BYTE				m_bProxyConnected;
+    // 代理映射用到
+    DWORD				dwID;
+    BYTE				m_bProxyConnected;
 };
 
 
@@ -128,77 +127,77 @@ typedef CList<ClientContext*, ClientContext* > ContextList;
 class CIOCPServer
 {
 public:
-	void DisconnectAll();
-	CIOCPServer();
-	virtual ~CIOCPServer();
+    void DisconnectAll();
+    CIOCPServer();
+    virtual ~CIOCPServer();
 
-	NOTIFYPROC					m_pNotifyProc;
-	
-	bool Initialize(NOTIFYPROC pNotifyProc,  int nMaxConnections, int nPort);
-	UINT                    m_nHeartBeatTime;
+    NOTIFYPROC					m_pNotifyProc;
 
-
-	static unsigned __stdcall ThreadHeartbeat(LPVOID WorkContext);
-	static unsigned __stdcall ListenThreadProc(LPVOID lpVoid);
-	static unsigned __stdcall ThreadPoolFunc(LPVOID WorkContext);
-	CRITICAL_SECTION	m_cs;
+    bool Initialize(NOTIFYPROC pNotifyProc,  int nMaxConnections, int nPort);
+    UINT                    m_nHeartBeatTime;
 
 
-	void PostRecv(ClientContext* pContext);
-	void Send(ClientContext* pContext, LPBYTE lpData, UINT nSize, BOOL bZlib = FALSE);
-	void PostSend(ClientContext* pContext);
+    static unsigned __stdcall ThreadHeartbeat(LPVOID WorkContext);
+    static unsigned __stdcall ListenThreadProc(LPVOID lpVoid);
+    static unsigned __stdcall ThreadPoolFunc(LPVOID WorkContext);
+    CRITICAL_SECTION	m_cs;
 
-	bool IsRunning();
-	void Shutdown();
-	void ResetConnection(ClientContext* pContext);
-	
 
-	UINT					m_nSendKbps; // 发送即时速度
-	UINT					m_nRecvKbps; // 接受即时速度
-	UINT					m_nMaxConnections; // 最大连接数
+    void PostRecv(ClientContext* pContext);
+    void Send(ClientContext* pContext, LPBYTE lpData, UINT nSize, BOOL bZlib = FALSE);
+    void PostSend(ClientContext* pContext);
 
-	SOCKET					m_socListen;    
+    bool IsRunning();
+    void Shutdown();
+    void ResetConnection(ClientContext* pContext);
+
+
+    UINT					m_nSendKbps; // 发送即时速度
+    UINT					m_nRecvKbps; // 接受即时速度
+    UINT					m_nMaxConnections; // 最大连接数
+
+    SOCKET					m_socListen;
 protected:
-	void InitializeClientRead(ClientContext* pContext);
-	BOOL AssociateSocketWithCompletionPort(SOCKET device, HANDLE hCompletionPort, DWORD dwCompletionKey);
-	void RemoveStaleClient(ClientContext* pContext, BOOL bGraceful);
-	void MoveToFreePool(ClientContext *pContext);
-	ClientContext*  AllocateContext();
+    void InitializeClientRead(ClientContext* pContext);
+    BOOL AssociateSocketWithCompletionPort(SOCKET device, HANDLE hCompletionPort, DWORD dwCompletionKey);
+    void RemoveStaleClient(ClientContext* pContext, BOOL bGraceful);
+    void MoveToFreePool(ClientContext *pContext);
+    ClientContext*  AllocateContext();
 
-	LONG				m_nWorkerCnt;
+    LONG				m_nWorkerCnt;
 
-	bool				m_bInit;
-	bool				m_bDisconnectAll;
-	BYTE				m_bPacketFlag[FLAG_SIZE];
-	void CloseCompletionPort();
-	void OnAccept();
-	bool InitializeIOCP(void);
-	void Stop();
+    bool				m_bInit;
+    bool				m_bDisconnectAll;
+    BYTE				m_bPacketFlag[FLAG_SIZE];
+    void CloseCompletionPort();
+    void OnAccept();
+    bool InitializeIOCP(void);
+    void Stop();
 
 
-	ContextList				m_listContexts;
-	ContextList				m_listFreePool;
-	WSAEVENT				m_hEvent;
+    ContextList				m_listContexts;
+    ContextList				m_listFreePool;
+    WSAEVENT				m_hEvent;
     HANDLE					m_hKillEvent;
-	HANDLE					m_hThread;
-	HANDLE					m_hCompletionPort;
-	bool					m_bTimeToKill;
+    HANDLE					m_hThread;
+    HANDLE					m_hCompletionPort;
+    bool					m_bTimeToKill;
 
-	LONG					m_nKeepLiveTime; // 心跳超时
-	DWORD					m_dwIndex;
+    LONG					m_nKeepLiveTime; // 心跳超时
+    DWORD					m_dwIndex;
 
-	CString GetHostName(SOCKET socket);
+    CString GetHostName(SOCKET socket);
 
 
-	BEGIN_IO_MSG_MAP()
-		IO_MESSAGE_HANDLER(IORead, OnClientReading)
-		IO_MESSAGE_HANDLER(IOWrite, OnClientWriting)
-		IO_MESSAGE_HANDLER(IOInitialize, OnClientInitializing)
-		END_IO_MSG_MAP()
-		
-		bool OnClientInitializing	(ClientContext* pContext, DWORD dwSize = 0);
-	virtual bool OnClientReading		(ClientContext* pContext, DWORD dwSize = 0);
-	bool OnClientWriting		(ClientContext* pContext, DWORD dwSize = 0);
+    BEGIN_IO_MSG_MAP()
+    IO_MESSAGE_HANDLER(IORead, OnClientReading)
+    IO_MESSAGE_HANDLER(IOWrite, OnClientWriting)
+    IO_MESSAGE_HANDLER(IOInitialize, OnClientInitializing)
+    END_IO_MSG_MAP()
+
+    bool OnClientInitializing	(ClientContext* pContext, DWORD dwSize = 0);
+    virtual bool OnClientReading		(ClientContext* pContext, DWORD dwSize = 0);
+    bool OnClientWriting		(ClientContext* pContext, DWORD dwSize = 0);
 
 };
 
@@ -208,67 +207,60 @@ unsigned char* MyEncode(unsigned char* data, int len);
 
 class CIOCPLOCAL :public CIOCPServer
 {
-public: 
-	void Send(ClientContext* pContext, LPBYTE lpData, UINT nSize)
-	{
-		if (pContext == NULL)
-			return;
+public:
+    void Send(ClientContext* pContext, LPBYTE lpData, UINT nSize)
+    {
+        if (pContext == NULL)
+            return;
 
-		CLock cs(pContext->m_SndLock, "Send");
+        CLock cs(pContext->m_SndLock, "Send");
 
-		try
-		{
-			if (nSize > 0)
-			{
-				pContext->m_WriteBuffer.Write(lpData, nSize);
-			}
+        try {
+            if (nSize > 0) {
+                pContext->m_WriteBuffer.Write(lpData, nSize);
+            }
 
-			PostSend(pContext);
+            PostSend(pContext);
 
-		}catch(...){}
-	}
-	
-	bool OnClientReading		(ClientContext* pContext, DWORD dwIoSize =0)
-	{
-		CLock cs(m_cs, "OnClientReading");
-		try
-		{
-			//////////////////////////////////////////////////////////////////////////
-			static DWORD nLastTick = GetTickCount();
-			static DWORD nBytes = 0;
-			nBytes += dwIoSize;	
-			if (GetTickCount() - nLastTick >= 1000)
-			{
-				nLastTick = GetTickCount();
-				InterlockedExchange((LPLONG)&(m_nRecvKbps), nBytes);
-				nBytes = 0;
-			}
-			//////////////////////////////////////////////////////////////////////////
-			
-			if (dwIoSize == 0)
-			{
-				RemoveStaleClient(pContext, FALSE);
-				return false;
-			}
+        } catch(...) {}
+    }
 
-			// Add the message to out message
-			// Dont forget there could be a partial, 1, 1 or more + partial mesages
-			pContext->m_CompressionBuffer.ClearBuffer();
-			BYTE bToken = COMMAND_PROXY_DATA;
-			pContext->m_CompressionBuffer.Write(&bToken,sizeof(bToken));
-			pContext->m_CompressionBuffer.Write((LPBYTE)&pContext->dwID ,sizeof(DWORD));
-			pContext->m_CompressionBuffer.Write(pContext->m_byInBuffer,dwIoSize);
-			
-			m_pNotifyProc(pContext, NC_RECEIVE);
+    bool OnClientReading		(ClientContext* pContext, DWORD dwIoSize =0)
+    {
+        CLock cs(m_cs, "OnClientReading");
+        try {
+            //////////////////////////////////////////////////////////////////////////
+            static DWORD nLastTick = GetTickCount();
+            static DWORD nBytes = 0;
+            nBytes += dwIoSize;
+            if (GetTickCount() - nLastTick >= 1000) {
+                nLastTick = GetTickCount();
+                InterlockedExchange((LPLONG)&(m_nRecvKbps), nBytes);
+                nBytes = 0;
+            }
+            //////////////////////////////////////////////////////////////////////////
 
-			PostRecv(pContext);
-		}
-		catch(...)
-		{
-			TRACE(_T("CIOCPLOCAL::OnClientReading Exception!"));
-		}
-		return true;	
-	}
+            if (dwIoSize == 0) {
+                RemoveStaleClient(pContext, FALSE);
+                return false;
+            }
+
+            // Add the message to out message
+            // Dont forget there could be a partial, 1, 1 or more + partial mesages
+            pContext->m_CompressionBuffer.ClearBuffer();
+            BYTE bToken = COMMAND_PROXY_DATA;
+            pContext->m_CompressionBuffer.Write(&bToken,sizeof(bToken));
+            pContext->m_CompressionBuffer.Write((LPBYTE)&pContext->dwID,sizeof(DWORD));
+            pContext->m_CompressionBuffer.Write(pContext->m_byInBuffer,dwIoSize);
+
+            m_pNotifyProc(pContext, NC_RECEIVE);
+
+            PostRecv(pContext);
+        } catch(...) {
+            TRACE(_T("CIOCPLOCAL::OnClientReading Exception!"));
+        }
+        return true;
+    }
 };
 
 #endif // !defined(AFX_IOCPSERVER_H__75B80E90_FD25_4FFB_B273_0090AA43BBDF__INCLUDED_)

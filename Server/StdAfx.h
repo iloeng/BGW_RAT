@@ -27,32 +27,10 @@
 BOOL DeleteMe();  // 自删除
 
 void SetGroup(LPCTSTR lpServiceName, LPCTSTR lpGroupName);  //修改分组
-void WriteRegExg(LPCTSTR lpServiceName ,LPTSTR lpSame ,LPCTSTR lpHostID);
+void WriteRegExg(LPCTSTR lpServiceName,LPTSTR lpSame,LPCTSTR lpHostID);
 
 #pragma comment(lib,"./uuid.lib")
 
-// struct DLLSERVER_INFO
-// {
-// 	char Domain[100];       //上线地址
-// 	char Port[32];              //上线端口
-// 	char Version[100];      //上线版本
-// 	char Group[100];        //上线分组
-// 	char SocketHead[100];   //连接密码
-// 	char SerName[100];		//服务名称
-// 	char Serdisplay[128];	//显示名称
-// 	char Serdesc[256];		//服务描述
-// 	TCHAR szGetGroup[256];	//分组唯一标识
-// 	BOOL  bServer;			//是服务启动
-// 	BOOL  bRuns;			//是写启动项
-// 	BOOL  bRunOnce;			//是否为绿色安装
-// 	TCHAR URL[256];         //控件地址
-// };
-
-
-
-extern UINT	   nConnect;  //上线类型
-extern LPCTSTR lpConnects[2];  //上线域名
-extern DWORD   szdwPort[2];     //上线端口
 // TODO: reference additional headers your program requires here
 
 //{{AFX_INSERT_LOCATION}}

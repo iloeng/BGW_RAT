@@ -14,33 +14,33 @@ class CSelectQQ : public CDialog
 {
 // Construction
 public:
-	CSelectQQ(CString strQQNum,CWnd* pParent = NULL);   // standard constructor
+    CSelectQQ(CString strQQNum,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CSelectQQ)
-	enum { IDD = IDD_SELECT_QQ };
-	CComboBox	m_combo_qq;
-	//}}AFX_DATA
-	CString m_strQQ;
-	CString m_strSelect;
+    //{{AFX_DATA(CSelectQQ)
+    enum { IDD = IDD_SELECT_QQ };
+    CComboBox	m_combo_qq;
+    //}}AFX_DATA
+    CString m_strQQ;
+    CString m_strSelect;
 
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CSelectQQ)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CSelectQQ)
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CSelectQQ)
-	afx_msg void OnSelchangeComboQq();
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    // Generated message map functions
+    //{{AFX_MSG(CSelectQQ)
+    afx_msg void OnSelchangeComboQq();
+    virtual BOOL OnInitDialog();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

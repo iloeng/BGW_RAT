@@ -6,23 +6,23 @@
 #pragma comment(lib,"kernel32.lib")
 #pragma comment(lib,"user32.lib")
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved
-					   )
+                     )
 {
     return TRUE;
 }
 
-extern "C" __declspec(dllexport) BOOL OpenProxy(LPVOID lparam)     
+extern "C" __declspec(dllexport) BOOL OpenProxy(LPVOID lparam)
 {
-	ProxyMain(lparam);
-	return 0;
+    ProxyMain(lparam);
+    return 0;
 }
 
-extern "C" __declspec(dllexport) BOOL CloseProxy()     
+extern "C" __declspec(dllexport) BOOL CloseProxy()
 {
-	STOPProxy();
-	return 0;
+    STOPProxy();
+    return 0;
 }
 

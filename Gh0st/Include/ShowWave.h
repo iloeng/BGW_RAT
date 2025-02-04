@@ -15,7 +15,7 @@ class CShowWave : public CStatic
 {
 // Construction
 public:
-	CShowWave();
+    CShowWave();
 
 // Attributes
 public:
@@ -24,31 +24,31 @@ public:
 public:
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CShowWave)
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CShowWave)
+    //}}AFX_VIRTUAL
 
 // Implementation
 public:
-	virtual ~CShowWave();
+    virtual ~CShowWave();
 
-	int     m_nSize;
-	BYTE    DrawData[DRAWBUFFERSIZE];
+    int     m_nSize;
+    BYTE    DrawData[DRAWBUFFERSIZE];
 
-	HWND m_hWnd;
-	void SetHwnd(HWND hWnd);
+    HWND m_hWnd;
+    void SetHwnd(HWND hWnd);
 
-	CRect rcClient;
-	
-	CBrush brush;
+    CRect rcClient;
 
-	void    SetSoundInBuffer(BYTE *buff,int nSize,int nBits);
-	// Generated message map functions
+    CBrush brush;
+
+    void    SetSoundInBuffer(BYTE *buff,int nSize,int nBits);
+    // Generated message map functions
 protected:
-	//{{AFX_MSG(CShowWave)
-	afx_msg void OnPaint();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    //{{AFX_MSG(CShowWave)
+    afx_msg void OnPaint();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////

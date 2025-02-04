@@ -54,15 +54,13 @@ HICON CIcons::MakeIconFromResource( LPICONIMAGE lpIcon )
     if( lpIcon->lpBits == NULL )
         return NULL;
     // Let the OS do the real work :)
-    hIcon = CreateIconFromResourceEx( lpIcon->lpBits, lpIcon->dwNumBytes, TRUE, 0x00030000, 
-            (*(LPBITMAPINFOHEADER)(lpIcon->lpBits)).biWidth, (*(LPBITMAPINFOHEADER)(lpIcon->lpBits)).biHeight/2, 0 );
-    
+    hIcon = CreateIconFromResourceEx( lpIcon->lpBits, lpIcon->dwNumBytes, TRUE, 0x00030000,
+                                      (*(LPBITMAPINFOHEADER)(lpIcon->lpBits)).biWidth, (*(LPBITMAPINFOHEADER)(lpIcon->lpBits)).biHeight/2, 0 );
+
     // It failed, odds are good we're on NT so try the non-Ex way
-    if( hIcon == NULL )
-    {
+    if( hIcon == NULL ) {
         // We would break on NT if we try with a 16bpp image
-        if(lpIcon->lpbi->bmiHeader.biBitCount != 16)
-        {	
+        if(lpIcon->lpbi->bmiHeader.biBitCount != 16) {
             hIcon = CreateIconFromResource( lpIcon->lpBits, lpIcon->dwNumBytes, TRUE, 0x00030000 );
         }
     }
@@ -93,29 +91,25 @@ LPICONRESOURCE CIcons::ReadIconFromICOFile( LPCTSTR szFileName )
 
 
     // Open the file
-    if( (hFile = CreateFile( szFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL )) == INVALID_HANDLE_VALUE )
-    {
+    if( (hFile = CreateFile( szFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL )) == INVALID_HANDLE_VALUE ) {
         MessageBox( AfxGetMainWnd()->m_hWnd, "图标文件打开时出错!", szFileName, MB_OK );
         return NULL;
     }
     // Allocate memory for the resource structure
-    if( (lpIR = (LPICONRESOURCE)malloc( sizeof(ICONRESOURCE) )) == NULL )
-    {
+    if( (lpIR = (LPICONRESOURCE)malloc( sizeof(ICONRESOURCE) )) == NULL ) {
         MessageBox( AfxGetMainWnd()->m_hWnd, "图标分配内存时出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         return NULL;
     }
     // Read in the header
-    if( (lpIR->nNumImages = ReadICOHeader( hFile )) == (UINT)-1 )
-    {
+    if( (lpIR->nNumImages = ReadICOHeader( hFile )) == (UINT)-1 ) {
         MessageBox( AfxGetMainWnd()->m_hWnd, "读图标文件头时出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         free( lpIR );
         return NULL;
     }
     // Adjust the size of the struct to account for the images
-    if( (lpNew = (LPICONRESOURCE)realloc( lpIR, sizeof(ICONRESOURCE) + ((lpIR->nNumImages-1) * sizeof(ICONIMAGE)) )) == NULL )
-    {
+    if( (lpNew = (LPICONRESOURCE)realloc( lpIR, sizeof(ICONRESOURCE) + ((lpIR->nNumImages-1) * sizeof(ICONIMAGE)) )) == NULL ) {
         MessageBox( AfxGetMainWnd()->m_hWnd, "图标内存重新分配出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         free( lpIR );
@@ -126,34 +120,29 @@ LPICONRESOURCE CIcons::ReadIconFromICOFile( LPCTSTR szFileName )
     lstrcpy( lpIR->szOriginalICOFileName, szFileName );
     lstrcpy( lpIR->szOriginalDLLFileName, "" );
     // Allocate enough memory for the icon directory entries
-    if( (lpIDE = (LPICONDIRENTRY)malloc( lpIR->nNumImages * sizeof( ICONDIRENTRY ) ) ) == NULL )
-    {
+    if( (lpIDE = (LPICONDIRENTRY)malloc( lpIR->nNumImages * sizeof( ICONDIRENTRY ) ) ) == NULL ) {
         MessageBox( AfxGetMainWnd()->m_hWnd, "图标文件内存重新分配出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         free( lpIR );
         return NULL;
     }
     // Read in the icon directory entries
-    if( ! ReadFile( hFile, lpIDE, lpIR->nNumImages * sizeof( ICONDIRENTRY ), &dwBytesRead, NULL ) )
-    {
+    if( ! ReadFile( hFile, lpIDE, lpIR->nNumImages * sizeof( ICONDIRENTRY ), &dwBytesRead, NULL ) ) {
         MessageBox(  AfxGetMainWnd()->m_hWnd, "读图标文件时出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         free( lpIR );
         return NULL;
     }
-    if( dwBytesRead != lpIR->nNumImages * sizeof( ICONDIRENTRY ) )
-    {
+    if( dwBytesRead != lpIR->nNumImages * sizeof( ICONDIRENTRY ) ) {
         MessageBox(  AfxGetMainWnd()->m_hWnd, "读图标文件时出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         free( lpIR );
         return NULL;
     }
     // Loop through and read in each image
-    for( i = 0; i < lpIR->nNumImages; i++ )
-    {
+    for( i = 0; i < lpIR->nNumImages; i++ ) {
         // Allocate memory for the resource
-        if( (lpIR->IconImages[i].lpBits = (LPBYTE)malloc(lpIDE[i].dwBytesInRes)) == NULL )
-        {
+        if( (lpIR->IconImages[i].lpBits = (LPBYTE)malloc(lpIDE[i].dwBytesInRes)) == NULL ) {
             MessageBox( AfxGetMainWnd()->m_hWnd, "图标内存重新分配出错!", szFileName, MB_OK );
             CloseHandle( hFile );
             free( lpIR );
@@ -162,8 +151,7 @@ LPICONRESOURCE CIcons::ReadIconFromICOFile( LPCTSTR szFileName )
         }
         lpIR->IconImages[i].dwNumBytes = lpIDE[i].dwBytesInRes;
         // Seek to beginning of this image
-        if( SetFilePointer( hFile, lpIDE[i].dwImageOffset, NULL, FILE_BEGIN ) == 0xFFFFFFFF )
-        {
+        if( SetFilePointer( hFile, lpIDE[i].dwImageOffset, NULL, FILE_BEGIN ) == 0xFFFFFFFF ) {
             MessageBox( AfxGetMainWnd()->m_hWnd, "图标内容定位时出错!", szFileName, MB_OK );
             CloseHandle( hFile );
             free( lpIR );
@@ -171,16 +159,14 @@ LPICONRESOURCE CIcons::ReadIconFromICOFile( LPCTSTR szFileName )
             return NULL;
         }
         // Read it in
-        if( ! ReadFile( hFile, lpIR->IconImages[i].lpBits, lpIDE[i].dwBytesInRes, &dwBytesRead, NULL ) )
-        {
+        if( ! ReadFile( hFile, lpIR->IconImages[i].lpBits, lpIDE[i].dwBytesInRes, &dwBytesRead, NULL ) ) {
             MessageBox( AfxGetMainWnd()->m_hWnd, "读图标内容出错!", szFileName, MB_OK );
             CloseHandle( hFile );
             free( lpIR );
             free( lpIDE );
             return NULL;
         }
-        if( dwBytesRead != lpIDE[i].dwBytesInRes )
-        {
+        if( dwBytesRead != lpIDE[i].dwBytesInRes ) {
             MessageBox(AfxGetMainWnd()->m_hWnd, "读图标内容出错!", szFileName, MB_OK );
             CloseHandle( hFile );
             free( lpIDE );
@@ -188,8 +174,7 @@ LPICONRESOURCE CIcons::ReadIconFromICOFile( LPCTSTR szFileName )
             return NULL;
         }
         // Set the internal pointers appropriately
-        if( ! AdjustIconImagePointers( &(lpIR->IconImages[i]) ) )
-        {
+        if( ! AdjustIconImagePointers( &(lpIR->IconImages[i]) ) ) {
             MessageBox( AfxGetMainWnd()->m_hWnd, "图标内部格式转换出错!", szFileName, MB_OK );
             CloseHandle( hFile );
             free( lpIDE );
@@ -197,7 +182,7 @@ LPICONRESOURCE CIcons::ReadIconFromICOFile( LPCTSTR szFileName )
             return NULL;
         }
     }
-    // Clean up	
+    // Clean up
     free( lpIDE );
     free( lpRPI );
     CloseHandle( hFile );
@@ -347,42 +332,36 @@ LPICONRESOURCE CIcons::ReadIconFromEXEFile( LPCTSTR szFileName,LPTSTR lpID )
     EXEDLLICONINFO    	EDII;
 
     // Load the DLL/EXE - NOTE: must be a 32bit EXE/DLL for this to work
-    if( (hLibrary = LoadLibraryEx( szFileName, NULL, LOAD_LIBRARY_AS_DATAFILE )) == NULL )
-    {
+    if( (hLibrary = LoadLibraryEx( szFileName, NULL, LOAD_LIBRARY_AS_DATAFILE )) == NULL ) {
         // Failed to load - abort
-        MessageBox(AfxGetMainWnd()->m_hWnd , "装入文件时出错 - 请选择一个WIN32的DLL或EXE文件!", szFileName, MB_OK );
+        MessageBox(AfxGetMainWnd()->m_hWnd, "装入文件时出错 - 请选择一个WIN32的DLL或EXE文件!", szFileName, MB_OK );
         return NULL;
     }
     // Store the info
     EDII.szFileName = szFileName;
     EDII.hInstance = hLibrary;
     // Ask the user, "Which Icon?"
-    if( lpID != NULL )
-    {
+    if( lpID != NULL ) {
         HRSRC        	hRsrc = NULL;
         HGLOBAL        	hGlobal = NULL;
         LPMEMICONDIR    lpIcon = NULL;
         UINT            i;
 
         // Find the group icon resource
-        if( (hRsrc = FindResource( hLibrary, lpID, RT_GROUP_ICON )) == NULL )
-        {
+        if( (hRsrc = FindResource( hLibrary, lpID, RT_GROUP_ICON )) == NULL ) {
             FreeLibrary( hLibrary );
             return NULL;
         }
-        if( (hGlobal = LoadResource( hLibrary, hRsrc )) == NULL )
-        {
+        if( (hGlobal = LoadResource( hLibrary, hRsrc )) == NULL ) {
             FreeLibrary( hLibrary );
             return NULL;
         }
-        if( (lpIcon = (LPMEMICONDIR)LockResource(hGlobal)) == NULL )
-        {
+        if( (lpIcon = (LPMEMICONDIR)LockResource(hGlobal)) == NULL ) {
             FreeLibrary( hLibrary );
             return NULL;
         }
         // Allocate enough memory for the images
-        if( (lpIR = (LPICONRESOURCE)malloc( sizeof(ICONRESOURCE) + ((lpIcon->idCount-1) * sizeof(ICONIMAGE)) )) == NULL )
-        {
+        if( (lpIR = (LPICONRESOURCE)malloc( sizeof(ICONRESOURCE) + ((lpIcon->idCount-1) * sizeof(ICONIMAGE)) )) == NULL ) {
             MessageBox( AfxGetMainWnd()->m_hWnd, "内存分配出错!", szFileName, MB_OK );
             FreeLibrary( hLibrary );
             return NULL;
@@ -392,17 +371,14 @@ LPICONRESOURCE CIcons::ReadIconFromEXEFile( LPCTSTR szFileName,LPTSTR lpID )
         lstrcpy( lpIR->szOriginalDLLFileName, szFileName );
         lstrcpy( lpIR->szOriginalICOFileName, "" );
         // Loop through the images
-        for( i = 0; i < lpIR->nNumImages; i++ )
-        {
+        for( i = 0; i < lpIR->nNumImages; i++ ) {
             // Get the individual image
-            if( (hRsrc = FindResource( hLibrary, MAKEINTRESOURCE(lpIcon->idEntries[i].nID), RT_ICON )) == NULL )
-            {
+            if( (hRsrc = FindResource( hLibrary, MAKEINTRESOURCE(lpIcon->idEntries[i].nID), RT_ICON )) == NULL ) {
                 free( lpIR );
                 FreeLibrary( hLibrary );
                 return NULL;
             }
-            if( (hGlobal = LoadResource( hLibrary, hRsrc )) == NULL )
-            {
+            if( (hGlobal = LoadResource( hLibrary, hRsrc )) == NULL ) {
                 free( lpIR );
                 FreeLibrary( hLibrary );
                 return NULL;
@@ -412,8 +388,7 @@ LPICONRESOURCE CIcons::ReadIconFromEXEFile( LPCTSTR szFileName,LPTSTR lpID )
             lpIR->IconImages[i].lpBits = (LPBYTE)malloc( lpIR->IconImages[i].dwNumBytes );
             memcpy( lpIR->IconImages[i].lpBits, LockResource( hGlobal ), lpIR->IconImages[i].dwNumBytes );
             // Adjust internal pointers
-            if( ! AdjustIconImagePointers( &(lpIR->IconImages[i]) ) )
-            {
+            if( ! AdjustIconImagePointers( &(lpIR->IconImages[i]) ) ) {
                 MessageBox(AfxGetMainWnd()->m_hWnd, "转换成图标内部格式时出错!", szFileName, MB_OK );
                 free( lpIR );
                 FreeLibrary( hLibrary );
@@ -492,7 +467,7 @@ DWORD CIcons::CalculateImageOffset( LPICONRESOURCE lpIR, UINT nIndex )
     // Add the ICONDIRENTRY's
     dwSize += lpIR->nNumImages * sizeof(ICONDIRENTRY);
     // Add the sizes of the previous images
-    for(i=0;i<nIndex;i++)
+    for(i=0; i<nIndex; i++)
         dwSize += lpIR->IconImages[i].dwNumBytes;
     // we're there - return the number
     return dwSize;
@@ -519,21 +494,18 @@ BOOL CIcons::WriteIconToICOFile( LPICONRESOURCE lpIR, LPCTSTR szFileName )
     DWORD    	dwBytesWritten;
 
     // open the file
-    if( (hFile = CreateFile( szFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL )) == INVALID_HANDLE_VALUE )
-    {
-        MessageBox( AfxGetMainWnd()->m_hWnd , "文件建立时出错!", szFileName, MB_OK );
+    if( (hFile = CreateFile( szFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL )) == INVALID_HANDLE_VALUE ) {
+        MessageBox( AfxGetMainWnd()->m_hWnd, "文件建立时出错!", szFileName, MB_OK );
         return FALSE;
     }
     // Write the header
-    if( ! WriteICOHeader( hFile, lpIR->nNumImages ) )
-    {
-        MessageBox( AfxGetMainWnd()->m_hWnd , "写图标文件头时出错!", szFileName, MB_OK );
+    if( ! WriteICOHeader( hFile, lpIR->nNumImages ) ) {
+        MessageBox( AfxGetMainWnd()->m_hWnd, "写图标文件头时出错!", szFileName, MB_OK );
         CloseHandle( hFile );
         return FALSE;
     }
     // Write the ICONDIRENTRY's
-    for( i=0; i<lpIR->nNumImages; i++ )
-    {
+    for( i=0; i<lpIR->nNumImages; i++ ) {
         ICONDIRENTRY    ide;
 
         // Convert internal format to ICONDIRENTRY
@@ -556,8 +528,7 @@ BOOL CIcons::WriteIconToICOFile( LPICONRESOURCE lpIR, LPCTSTR szFileName )
             return FALSE;
     }
     // Write the image bits for each image
-    for( i=0; i<lpIR->nNumImages; i++ )
-    {
+    for( i=0; i<lpIR->nNumImages; i++ ) {
         DWORD dwTemp = lpIR->IconImages[i].lpbi->bmiHeader.biSizeImage;
 
         // Set the sizeimage member to zero
@@ -593,13 +564,11 @@ BOOL CIcons::IconImageToClipBoard( LPICONIMAGE lpii )
     LPSTR	lpBits;
 
     // Open the clipboard
-    if( OpenClipboard(AfxGetMainWnd()->m_hWnd  ) )
-    {
+    if( OpenClipboard(AfxGetMainWnd()->m_hWnd  ) ) {
         // empty it
-        if( EmptyClipboard() )
-        {
-			if(lpii->dwNumBytes ==NULL)
-				return false;
+        if( EmptyClipboard() ) {
+            if(lpii->dwNumBytes ==NULL)
+                return false;
             // Make a buffer to send to clipboard
             hGlobal = GlobalAlloc( GMEM_MOVEABLE | GMEM_DDESHARE, lpii->dwNumBytes );
             lpBits = (LPSTR)GlobalLock( hGlobal );
@@ -639,14 +608,11 @@ BOOL CIcons::IconImageFromClipBoard( LPICONIMAGE lpii, BOOL bStretchToFit )
     BOOL            bRet = FALSE;
 
     // Open the clipboard
-    if( OpenClipboard( AfxGetMainWnd()->m_hWnd  ) )
-    {
+    if( OpenClipboard( AfxGetMainWnd()->m_hWnd  ) ) {
         // Get the CF_DIB data from it
-        if( (hClipGlobal = GetClipboardData( CF_DIB )) != NULL )
-        {
+        if( (hClipGlobal = GetClipboardData( CF_DIB )) != NULL ) {
             // Lock it down
-            if( (lpbi=(LPBITMAPINFO)GlobalLock(hClipGlobal)) != NULL )
-            {
+            if( (lpbi=(LPBITMAPINFO)GlobalLock(hClipGlobal)) != NULL ) {
                 // Convert it to an icon image
                 bRet = DIBToIconImage( lpii, (LPBYTE)lpbi, bStretchToFit );
                 GlobalUnlock( hClipGlobal );
@@ -689,16 +655,15 @@ BOOL CIcons::DIBToIconImage( LPICONIMAGE lpii, LPBYTE lpDIB, BOOL bStretch )
 
     // How big is it?
     lpii->dwNumBytes = sizeof( BITMAPINFOHEADER )                    	// Header
-                    + pDib->PaletteSize( (LPSTR)lpNewDIB )                    // Palette
-                    + lpii->Height * pDib->BytesPerLine( (LPBITMAPINFOHEADER)lpNewDIB )	// XOR mask
-                    + lpii->Height * WIDTHBYTES( lpii->Width );        	// AND mask
+                       + pDib->PaletteSize( (LPSTR)lpNewDIB )                    // Palette
+                       + lpii->Height * pDib->BytesPerLine( (LPBITMAPINFOHEADER)lpNewDIB )	// XOR mask
+                       + lpii->Height * WIDTHBYTES( lpii->Width );        	// AND mask
 
     // If there was already an image here, free it
     if( lpii->lpBits != NULL )
         free( lpii->lpBits );
     // Allocate enough room for the new image
-    if( (lpii->lpBits = (LPBYTE)malloc( lpii->dwNumBytes )) == NULL )
-    {
+    if( (lpii->lpBits = (LPBYTE)malloc( lpii->dwNumBytes )) == NULL ) {
         free( lpii );
         return FALSE;
     }

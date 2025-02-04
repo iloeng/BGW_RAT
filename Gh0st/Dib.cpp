@@ -44,7 +44,7 @@ CDib::~CDib()
 \****************************************************************************/
 LPSTR CDib::FindDIBBits( LPSTR lpbi )
 {
-   return ( lpbi + *(LPDWORD)lpbi + PaletteSize( lpbi ) );
+    return ( lpbi + *(LPDWORD)lpbi + PaletteSize( lpbi ) );
 }
 /* End FindDIBits() *********************************************************/
 
@@ -72,12 +72,15 @@ WORD CDib::DIBNumColors( LPSTR lpbi )
 
     wBitCount = ((LPBITMAPINFOHEADER) lpbi)->biBitCount;
 
-    switch (wBitCount)
-    {
-        case 1: return 2;
-        case 4: return 16;
-        case 8:	return 256;
-        default:return 0;
+    switch (wBitCount) {
+    case 1:
+        return 2;
+    case 4:
+        return 16;
+    case 8:
+        return 256;
+    default:
+        return 0;
     }
     return 0;
 }
@@ -165,8 +168,7 @@ LPBYTE CDib::ConvertDIBFormat( LPBITMAPINFO lpSrcDIB, UINT nWidth, UINT nHeight,
     lpbmi->bmiHeader.biClrUsed = 0;
     lpbmi->bmiHeader.biClrImportant = 0;
     // Fill in the color table
-    if( ! CopyColorTable( lpbmi, (LPBITMAPINFO)lpSrcDIB ) )
-    {
+    if( ! CopyColorTable( lpbmi, (LPBITMAPINFO)lpSrcDIB ) ) {
         free( lpbmi );
         return NULL;
     }
@@ -194,20 +196,14 @@ LPBYTE CDib::ConvertDIBFormat( LPBITMAPINFO lpSrcDIB, UINT nWidth, UINT nHeight,
         SetDIBColorTable( hTargetDC, 0, 1 << lpbmi->bmiHeader.biBitCount, lpbmi->bmiColors );
 
     // If we are asking for a straight copy, do it
-    if( (lpSrcDIB->bmiHeader.biWidth==lpbmi->bmiHeader.biWidth) && (lpSrcDIB->bmiHeader.biHeight==lpbmi->bmiHeader.biHeight) )
-    {
+    if( (lpSrcDIB->bmiHeader.biWidth==lpbmi->bmiHeader.biWidth) && (lpSrcDIB->bmiHeader.biHeight==lpbmi->bmiHeader.biHeight) ) {
         BitBlt( hTargetDC, 0, 0, lpbmi->bmiHeader.biWidth, lpbmi->bmiHeader.biHeight, hSourceDC, 0, 0, SRCCOPY );
-    }
-    else
-    {
+    } else {
         // else, should we stretch it?
-        if( bStretch )
-        {
+        if( bStretch ) {
             SetStretchBltMode( hTargetDC, COLORONCOLOR );
             StretchBlt( hTargetDC, 0, 0, lpbmi->bmiHeader.biWidth, lpbmi->bmiHeader.biHeight, hSourceDC, 0, 0, lpSrcDIB->bmiHeader.biWidth, lpSrcDIB->bmiHeader.biHeight, SRCCOPY );
-        }
-        else
-        {
+        } else {
             // or just take the upper left corner of the source
             BitBlt( hTargetDC, 0, 0, lpbmi->bmiHeader.biWidth, lpbmi->bmiHeader.biHeight, hSourceDC, 0, 0, SRCCOPY );
         }
@@ -253,81 +249,76 @@ LPBYTE CDib::ConvertDIBFormat( LPBITMAPINFO lpSrcDIB, UINT nWidth, UINT nHeight,
 BOOL CDib::CopyColorTable( LPBITMAPINFO lpTarget, LPBITMAPINFO lpSource )
 {
     // What we do depends on the target's color depth
-    switch( lpTarget->bmiHeader.biBitCount )
-    {
-        // 8bpp - need 256 entry color table
-        case 8:
-            if( lpSource->bmiHeader.biBitCount == 8 )
-            { // Source is 8bpp too, copy color table
-                memcpy( lpTarget->bmiColors, lpSource->bmiColors, 256*sizeof(RGBQUAD) );
-                return TRUE;
-            }
-            else
-            { // Source is != 8bpp, use halftone palette                
-                HPALETTE        hPal;
-                HDC            	hDC = GetDC( NULL );
-                PALETTEENTRY    pe[256];
-                UINT            i;
+    switch( lpTarget->bmiHeader.biBitCount ) {
+    // 8bpp - need 256 entry color table
+    case 8:
+        if( lpSource->bmiHeader.biBitCount == 8 ) {
+            // Source is 8bpp too, copy color table
+            memcpy( lpTarget->bmiColors, lpSource->bmiColors, 256*sizeof(RGBQUAD) );
+            return TRUE;
+        } else {
+            // Source is != 8bpp, use halftone palette
+            HPALETTE        hPal;
+            HDC            	hDC = GetDC( NULL );
+            PALETTEENTRY    pe[256];
+            UINT            i;
 
-                hPal = CreateHalftonePalette( hDC );
-                ReleaseDC( NULL, hDC );
-                GetPaletteEntries( hPal, 0, 256, pe );
-                DeleteObject( hPal );
-                for(i=0;i<256;i++)
-                {
-                    lpTarget->bmiColors[i].rgbRed = pe[i].peRed;
-                    lpTarget->bmiColors[i].rgbGreen = pe[i].peGreen;
-                    lpTarget->bmiColors[i].rgbBlue = pe[i].peBlue;
-                    lpTarget->bmiColors[i].rgbReserved = pe[i].peFlags;
-                }
-                return TRUE;
+            hPal = CreateHalftonePalette( hDC );
+            ReleaseDC( NULL, hDC );
+            GetPaletteEntries( hPal, 0, 256, pe );
+            DeleteObject( hPal );
+            for(i=0; i<256; i++) {
+                lpTarget->bmiColors[i].rgbRed = pe[i].peRed;
+                lpTarget->bmiColors[i].rgbGreen = pe[i].peGreen;
+                lpTarget->bmiColors[i].rgbBlue = pe[i].peBlue;
+                lpTarget->bmiColors[i].rgbReserved = pe[i].peFlags;
             }
+            return TRUE;
+        }
         break; // end 8bpp
 
-        // 4bpp - need 16 entry color table
-        case 4:
-            if( lpSource->bmiHeader.biBitCount == 4 )
-            { // Source is 4bpp too, copy color table
-                memcpy( lpTarget->bmiColors, lpSource->bmiColors, 16*sizeof(RGBQUAD) );
-                return TRUE;
-            }
-            else
-            { // Source is != 4bpp, use system palette
-                HPALETTE        hPal;
-                PALETTEENTRY    pe[256];
-                UINT            i;
+    // 4bpp - need 16 entry color table
+    case 4:
+        if( lpSource->bmiHeader.biBitCount == 4 ) {
+            // Source is 4bpp too, copy color table
+            memcpy( lpTarget->bmiColors, lpSource->bmiColors, 16*sizeof(RGBQUAD) );
+            return TRUE;
+        } else {
+            // Source is != 4bpp, use system palette
+            HPALETTE        hPal;
+            PALETTEENTRY    pe[256];
+            UINT            i;
 
-                hPal = (HPALETTE)GetStockObject( DEFAULT_PALETTE );
-                GetPaletteEntries( hPal, 0, 16, pe );
-                for(i=0;i<16;i++)
-                {
-                    lpTarget->bmiColors[i].rgbRed = pe[i].peRed;
-                    lpTarget->bmiColors[i].rgbGreen = pe[i].peGreen;
-                    lpTarget->bmiColors[i].rgbBlue = pe[i].peBlue;
-                    lpTarget->bmiColors[i].rgbReserved = pe[i].peFlags;
-                }
-                return TRUE;
+            hPal = (HPALETTE)GetStockObject( DEFAULT_PALETTE );
+            GetPaletteEntries( hPal, 0, 16, pe );
+            for(i=0; i<16; i++) {
+                lpTarget->bmiColors[i].rgbRed = pe[i].peRed;
+                lpTarget->bmiColors[i].rgbGreen = pe[i].peGreen;
+                lpTarget->bmiColors[i].rgbBlue = pe[i].peBlue;
+                lpTarget->bmiColors[i].rgbReserved = pe[i].peFlags;
             }
+            return TRUE;
+        }
         break; // end 4bpp
 
-        // 1bpp - need 2 entry mono color table
-        case 1:
-            lpTarget->bmiColors[0].rgbRed = 0;
-            lpTarget->bmiColors[0].rgbGreen = 0;
-            lpTarget->bmiColors[0].rgbBlue = 0;
-            lpTarget->bmiColors[0].rgbReserved = 0;
-            lpTarget->bmiColors[1].rgbRed = 255;
-            lpTarget->bmiColors[1].rgbGreen = 255;
-            lpTarget->bmiColors[1].rgbBlue = 255;
-            lpTarget->bmiColors[1].rgbReserved = 0;
+    // 1bpp - need 2 entry mono color table
+    case 1:
+        lpTarget->bmiColors[0].rgbRed = 0;
+        lpTarget->bmiColors[0].rgbGreen = 0;
+        lpTarget->bmiColors[0].rgbBlue = 0;
+        lpTarget->bmiColors[0].rgbReserved = 0;
+        lpTarget->bmiColors[1].rgbRed = 255;
+        lpTarget->bmiColors[1].rgbGreen = 255;
+        lpTarget->bmiColors[1].rgbBlue = 255;
+        lpTarget->bmiColors[1].rgbReserved = 0;
         break; // end 1bpp
 
-        // no color table for the > 8bpp modes
-        case 32:
-        case 24:
-        case 16:
-        default:
-            return TRUE;
+    // no color table for the > 8bpp modes
+    case 32:
+    case 24:
+    case 16:
+    default:
+        return TRUE;
         break;
     }
     return TRUE;
@@ -394,42 +385,36 @@ LPBYTE CDib::ReadBMPFile( LPCTSTR szFileName )
     DWORD            	dwBitsSize = 0;
 
     // Open the file
-    if( (hFile=CreateFile( szFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE )
-    {
+    if( (hFile=CreateFile( szFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE ) {
         MessageBox( NULL, "打开位图文件出错!", szFileName, MB_OK );
         return NULL;
     }
     // Read the header
-    if( ( ! ReadFile( hFile, &bfh, sizeof(BITMAPFILEHEADER), &dwBytes, NULL ) ) || ( dwBytes != sizeof( BITMAPFILEHEADER ) ) )
-    {
+    if( ( ! ReadFile( hFile, &bfh, sizeof(BITMAPFILEHEADER), &dwBytes, NULL ) ) || ( dwBytes != sizeof( BITMAPFILEHEADER ) ) ) {
         CloseHandle( hFile );
         MessageBox( NULL, "读位图文件头出错!", szFileName, MB_OK );
         return NULL;
     }
     // Does it look like a BMP file?
-    if( ( bfh.bfType != 0x4d42 ) || (bfh.bfReserved1!=0) || (bfh.bfReserved2!=0) )
-    {
+    if( ( bfh.bfType != 0x4d42 ) || (bfh.bfReserved1!=0) || (bfh.bfReserved2!=0) ) {
         CloseHandle( hFile );
         MessageBox( NULL, "未知的位图格式文件!", szFileName, MB_OK );
         return NULL;
     }
     // Allocate some memory
-    if( (lpDIB =(LPBYTE) malloc( sizeof( BITMAPINFO ) )) == NULL )
-    {
+    if( (lpDIB =(LPBYTE) malloc( sizeof( BITMAPINFO ) )) == NULL ) {
         CloseHandle( hFile );
         MessageBox( NULL, "位图内存重新分配出错!", szFileName, MB_OK );
         return NULL;
     }
     // Read in the BITMAPINFOHEADER
-    if( (!ReadFile( hFile, lpDIB, sizeof(BITMAPINFOHEADER), &dwBytes, NULL )) || (dwBytes!=sizeof(BITMAPINFOHEADER)) )
-    {
+    if( (!ReadFile( hFile, lpDIB, sizeof(BITMAPINFOHEADER), &dwBytes, NULL )) || (dwBytes!=sizeof(BITMAPINFOHEADER)) ) {
         CloseHandle( hFile );
         free( lpDIB );
         MessageBox( NULL, "读位图文件信息头出错!", szFileName, MB_OK );
         return NULL;
     }
-    if( ((LPBITMAPINFOHEADER)lpDIB)->biSize != sizeof( BITMAPINFOHEADER ) )
-    {
+    if( ((LPBITMAPINFOHEADER)lpDIB)->biSize != sizeof( BITMAPINFOHEADER ) ) {
         CloseHandle( hFile );
         free( lpDIB );
         MessageBox( NULL, "OS/2风格的位图不支持!", szFileName, MB_OK );
@@ -439,8 +424,7 @@ LPBYTE CDib::ReadBMPFile( LPCTSTR szFileName )
     wPaletteSize = PaletteSize((LPSTR)lpDIB);
     dwBitsSize = ((LPBITMAPINFOHEADER)lpDIB)->biHeight * BytesPerLine((LPBITMAPINFOHEADER)lpDIB);
     // realloc to account for the total size of the DIB
-    if( (lpTemp = (LPBYTE)realloc( lpDIB, sizeof( BITMAPINFOHEADER ) + wPaletteSize + dwBitsSize )) == NULL )
-    {
+    if( (lpTemp = (LPBYTE)realloc( lpDIB, sizeof( BITMAPINFOHEADER ) + wPaletteSize + dwBitsSize )) == NULL ) {
         CloseHandle( hFile );
         MessageBox( NULL, "重新分配位图信息头所需内存失败!", szFileName, MB_OK );
         free( lpDIB );
@@ -448,10 +432,8 @@ LPBYTE CDib::ReadBMPFile( LPCTSTR szFileName )
     }
     lpDIB = lpTemp;
     // If there is a color table, read it
-    if( wPaletteSize != 0 )
-    {
-        if( (!ReadFile( hFile, ((LPBITMAPINFO)lpDIB)->bmiColors, wPaletteSize, &dwBytes, NULL )) || (dwBytes!=wPaletteSize) )
-        {
+    if( wPaletteSize != 0 ) {
+        if( (!ReadFile( hFile, ((LPBITMAPINFO)lpDIB)->bmiColors, wPaletteSize, &dwBytes, NULL )) || (dwBytes!=wPaletteSize) ) {
             CloseHandle( hFile );
             free( lpDIB );
             MessageBox( NULL, "读位图颜色表出错!", szFileName, MB_OK );
@@ -460,10 +442,8 @@ LPBYTE CDib::ReadBMPFile( LPCTSTR szFileName )
     }
     // Seek to the bits
     // checking against 0 in case some bogus app didn't set this element
-    if( bfh.bfOffBits != 0 )
-    {
-        if( SetFilePointer( hFile, bfh.bfOffBits, NULL, FILE_BEGIN ) == 0xffffffff )
-        {
+    if( bfh.bfOffBits != 0 ) {
+        if( SetFilePointer( hFile, bfh.bfOffBits, NULL, FILE_BEGIN ) == 0xffffffff ) {
             CloseHandle( hFile );
             free( lpDIB );
             MessageBox( NULL, "位图文件大小定位出错!", szFileName, MB_OK );
@@ -471,8 +451,7 @@ LPBYTE CDib::ReadBMPFile( LPCTSTR szFileName )
         }
     }
     // Read the image bits
-    if( (!ReadFile( hFile, FindDIBBits((LPSTR)lpDIB), dwBitsSize, &dwBytes, NULL )) || (dwBytes!=dwBitsSize) )
-    {
+    if( (!ReadFile( hFile, FindDIBBits((LPSTR)lpDIB), dwBitsSize, &dwBytes, NULL )) || (dwBytes!=dwBitsSize) ) {
         CloseHandle( hFile );
         free( lpDIB );
         MessageBox( NULL, "读位图文件出错!", szFileName, MB_OK );
@@ -505,8 +484,7 @@ BOOL CDib::WriteBMPFile( LPCTSTR szFileName, LPBYTE lpDIB )
     LPBITMAPINFOHEADER	lpbmih;
 
     // Open the file
-    if( (hFile=CreateFile( szFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE )
-    {
+    if( (hFile=CreateFile( szFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE ) {
         MessageBox( NULL, "位图文件建立失败！", szFileName, MB_OK );
         return FALSE;
     }
@@ -516,8 +494,7 @@ BOOL CDib::WriteBMPFile( LPCTSTR szFileName, LPBYTE lpDIB )
     bfh.bfOffBits = sizeof( BITMAPFILEHEADER ) + sizeof( BITMAPINFOHEADER ) + PaletteSize((LPSTR) lpDIB );
     bfh.bfSize = (bfh.bfOffBits + ((LPBITMAPINFOHEADER)lpDIB)->biHeight * BytesPerLine((LPBITMAPINFOHEADER)lpDIB))/4;
     // Write the header
-    if( ( ! WriteFile( hFile, &bfh, sizeof(BITMAPFILEHEADER), &dwBytes, NULL ) ) || ( dwBytes != sizeof( BITMAPFILEHEADER ) ) )
-    {
+    if( ( ! WriteFile( hFile, &bfh, sizeof(BITMAPFILEHEADER), &dwBytes, NULL ) ) || ( dwBytes != sizeof( BITMAPFILEHEADER ) ) ) {
         CloseHandle( hFile );
         MessageBox( NULL, "写位图文件头出错!", szFileName, MB_OK );
         return FALSE;
@@ -525,8 +502,7 @@ BOOL CDib::WriteBMPFile( LPCTSTR szFileName, LPBYTE lpDIB )
     lpbmih = (LPBITMAPINFOHEADER)lpDIB;
 //    lpbmih->biHeight /= 2;
     dwBytesToWrite = bfh.bfOffBits + (lpbmih->biHeight * BytesPerLine(lpbmih));
-    if( ( ! WriteFile( hFile, lpDIB, dwBytesToWrite, &dwBytes, NULL ) ) || ( dwBytes != dwBytesToWrite ) )
-    {
+    if( ( ! WriteFile( hFile, lpDIB, dwBytesToWrite, &dwBytes, NULL ) ) || ( dwBytes != dwBytesToWrite ) ) {
         CloseHandle( hFile );
         MessageBox( NULL, "写位图文件出错!", szFileName, MB_OK );
         return FALSE;

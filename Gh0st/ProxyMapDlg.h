@@ -14,42 +14,42 @@ class CProxyMapDlg : public CDialog
 {
 // Construction
 public:
-	CProxyMapDlg(CWnd* pParent = NULL, CIOCPServer* pIOCPServer = NULL, ClientContext *pContext = NULL);   // standard constructor
+    CProxyMapDlg(CWnd* pParent = NULL, CIOCPServer* pIOCPServer = NULL, ClientContext *pContext = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CProxyMapDlg)
-	enum { IDD = IDD_DIALOG_PROXY_MAP };
-	CEdit	m_edit;
-	//}}AFX_DATA
+    //{{AFX_DATA(CProxyMapDlg)
+    enum { IDD = IDD_DIALOG_PROXY_MAP };
+    CEdit	m_edit;
+    //}}AFX_DATA
 
-	static void CALLBACK NotifyProc( ClientContext *pContext, UINT nCode);
-	ClientContext * pContexts[10000];
-	void OnReceiveComplete();
-	void AddLog(TCHAR * lpText);
-	LRESULT OnNotifyProc(WPARAM wParam, LPARAM lParam);
+    static void CALLBACK NotifyProc( ClientContext *pContext, UINT nCode);
+    ClientContext * pContexts[10000];
+    void OnReceiveComplete();
+    void AddLog(TCHAR * lpText);
+    LRESULT OnNotifyProc(WPARAM wParam, LPARAM lParam);
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CProxyMapDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CProxyMapDlg)
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CProxyMapDlg)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnClose();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    // Generated message map functions
+    //{{AFX_MSG(CProxyMapDlg)
+    virtual BOOL OnInitDialog();
+    afx_msg void OnClose();
+    afx_msg void OnSize(UINT nType, int cx, int cy);
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 private:
-	ClientContext* m_pContext;
-	CIOCPServer* m_iocpServer;
-	CIOCPLOCAL* m_iocpLocal;
-	CString m_IPAddress;
+    ClientContext* m_pContext;
+    CIOCPServer* m_iocpServer;
+    CIOCPLOCAL* m_iocpLocal;
+    CString m_IPAddress;
 };
 
 //{{AFX_INSERT_LOCATION}}

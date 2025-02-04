@@ -5,11 +5,11 @@
 #include <stdlib.h>
 typedef struct {
 
-    unsigned int state[4];      
+    unsigned int state[4];
 
-    unsigned int count[2];      
+    unsigned int count[2];
 
-    unsigned char buffer[64];      
+    unsigned char buffer[64];
 
 } MD5Context;
 
@@ -85,7 +85,7 @@ static unsigned char PADDING[64] =
 
 #define HH(a, b, c, d, x, s, ac) {(a) += H((b), (c), (d)) + (x) + (unsigned int)(ac); (a) = ROTATE_LEFT((a), (s));(a) += (b);}          \
 
- 
+
 #define II(a, b, c, d, x, s, ac) {(a) += I((b), (c), (d)) + (x) + (unsigned int)(ac); (a) = ROTATE_LEFT((a), (s));(a) += (b);}          \
 
 
@@ -96,17 +96,17 @@ static void MD5_Encode(unsigned char * output, unsigned int * input, unsigned in
     unsigned int i, j;
 
 
-    for (i = 0, j = 0; j < len; i++, j += 4) 
+    for (i = 0, j = 0; j < len; i++, j += 4)
 
     {
 
-       output[j] = (unsigned char) (input[i] & 0xff);
+        output[j] = (unsigned char) (input[i] & 0xff);
 
-       output[j + 1] = (unsigned char) ((input[i] >> 8) & 0xff);
+        output[j + 1] = (unsigned char) ((input[i] >> 8) & 0xff);
 
-       output[j + 2] = (unsigned char) ((input[i] >> 16) & 0xff);
+        output[j + 2] = (unsigned char) ((input[i] >> 16) & 0xff);
 
-       output[j + 3] = (unsigned char) ((input[i] >> 24) & 0xff);
+        output[j + 3] = (unsigned char) ((input[i] >> 24) & 0xff);
 
     }
 
@@ -124,13 +124,13 @@ static void MD5_Decode(unsigned int * output, unsigned char * input, unsigned in
 
     {
 
-       output[i] = ((unsigned int) input[j]) |
+        output[i] = ((unsigned int) input[j]) |
 
-           (((unsigned int) input[j + 1]) << 8) |
+                    (((unsigned int) input[j + 1]) << 8) |
 
-           (((unsigned int) input[j + 2]) << 16) |
+                    (((unsigned int) input[j + 2]) << 16) |
 
-           (((unsigned int) input[j + 3]) << 24);
+                    (((unsigned int) input[j + 3]) << 24);
 
     }
 
@@ -331,7 +331,7 @@ void MD5_Update(MD5Context * context, unsigned char * buf, unsigned int len)
 
     if ((context->count[0] += ((unsigned int) len << 3)) < ((unsigned int) len << 3))
 
-    context->count[1]++;
+        context->count[1]++;
 
     context->count[1] += ((unsigned int) len >> 29);
 
@@ -339,25 +339,25 @@ void MD5_Update(MD5Context * context, unsigned char * buf, unsigned int len)
     partLen = 64 - index;
 
 
-    if (len >= partLen) 
+    if (len >= partLen)
 
     {
 
-       memcpy((char *) &context->buffer[index], (char *) buf, partLen);
+        memcpy((char *) &context->buffer[index], (char *) buf, partLen);
 
-       MD5_Transform(context->state, context->buffer);
-
-
-       for (i = partLen; i + 63 < len; i += 64)
-
-           MD5_Transform(context->state, &buf[i]);
+        MD5_Transform(context->state, context->buffer);
 
 
-       index = 0;
+        for (i = partLen; i + 63 < len; i += 64)
 
-    } 
+            MD5_Transform(context->state, &buf[i]);
 
-    else 
+
+        index = 0;
+
+    }
+
+    else
 
     {
 
@@ -403,7 +403,7 @@ void MD5_Final(MD5Context * context, unsigned char digest[16])
 void MD5_File (char * filename,char *MD5)
 
 {
-	HANDLE file=INVALID_HANDLE_VALUE;
+    HANDLE file=INVALID_HANDLE_VALUE;
 
     MD5Context context;
 
@@ -412,41 +412,38 @@ void MD5_File (char * filename,char *MD5)
     int i;
 
     unsigned char buffer[0x0400];
- 
-	DWORD nBytesRead=0;
-	BOOL bResult =0;
+
+    DWORD nBytesRead=0;
+    BOOL bResult =0;
 
 
-	file=CreateFile(filename,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-	if(file==INVALID_HANDLE_VALUE)
-		return;//不能读取文件
-    else 
-    {
+    file=CreateFile(filename,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+    if(file==INVALID_HANDLE_VALUE)
+        return;//不能读取文件
+    else {
 
-       MD5_Init (&context);
-		
-       while (1)
-	   {
-		   ReadFile(file,buffer,1024, &nBytesRead,NULL);
-		   if (nBytesRead == 0 ) 
-			   break;
-		   MD5_Update (&context, buffer, nBytesRead);
-	   }
+        MD5_Init (&context);
+
+        while (1) {
+            ReadFile(file,buffer,1024, &nBytesRead,NULL);
+            if (nBytesRead == 0 )
+                break;
+            MD5_Update (&context, buffer, nBytesRead);
+        }
 
 
-       MD5_Final(&context,buff);
+        MD5_Final(&context,buff);
 
-       CloseHandle(file);
+        CloseHandle(file);
 
-       for(i=0;i<16;i++)
-       {
-		   char Temp_1[10]={NULL};
-           wsprintf(Temp_1,"%x",(buff[i] & 0xF0)>>4);
-		   strcat(MD5,Temp_1);	
-           wsprintf(Temp_1,"%x",buff[i] & 0x0F);
-		   strcat(MD5,Temp_1);	
-       }
-	   
+        for(i=0; i<16; i++) {
+            char Temp_1[10]= {NULL};
+            wsprintf(Temp_1,"%x",(buff[i] & 0xF0)>>4);
+            strcat(MD5,Temp_1);
+            wsprintf(Temp_1,"%x",buff[i] & 0x0F);
+            strcat(MD5,Temp_1);
+        }
+
     }
 
 }

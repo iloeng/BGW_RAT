@@ -14,39 +14,39 @@ class CSettingDlg : public CDialog
 {
 // Construction
 public:
-	void rebootmeA();
-	CSettingDlg(CWnd* pParent = NULL);   // standard constructor
+    void rebootmeA();
+    CSettingDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CSettingDlg)
-	enum { IDD = IDD_DIALOG_SETTING };
-	BOOL	m_disble_poptips;
-	UINT	m_listen_port;
-	BOOL	m_warning_tone;
-	UINT	m_edit_heartbeat_time;
-	BOOL	m_check_list_draw;
-	BOOL	m_national;
-	CString	m_edit_connect_pass;
-	//}}AFX_DATA
+    //{{AFX_DATA(CSettingDlg)
+    enum { IDD = IDD_DIALOG_SETTING };
+    BOOL	m_disble_poptips;
+    UINT	m_listen_port;
+    BOOL	m_warning_tone;
+    UINT	m_edit_heartbeat_time;
+    BOOL	m_check_list_draw;
+    BOOL	m_national;
+    CString	m_edit_connect_pass;
+    //}}AFX_DATA
 
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CSettingDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CSettingDlg)
+protected:
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CSettingDlg)
-	virtual void OnOK();
-	afx_msg void OnNational();
+    // Generated message map functions
+    //{{AFX_MSG(CSettingDlg)
+    virtual void OnOK();
+    afx_msg void OnNational();
 
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
