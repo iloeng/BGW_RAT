@@ -35,9 +35,6 @@ CBulidServer::~CBulidServer()
 
 BOOL CBulidServer::BulidServer(PVOID pStructPointer, INT iStructPointerSize, PCTSTR strDatFilePath, PCTSTR strBulidSavePath)
 {
-
-
-//	MessageBox(NULL,strDatFilePath,NULL,NULL);
     if (!IsDatFile(strDatFilePath)) {
 
         SetErrorCode(__ERROR_CODE_OPEN_DAT_FILE_FAILED);
@@ -49,8 +46,6 @@ BOOL CBulidServer::BulidServer(PVOID pStructPointer, INT iStructPointerSize, PCT
     PCHAR pDatFileDataBuffer = NULL;
     // Dat文件数据大小
     DWORD dwDatFileDataSize = 0;
-
-
 
     if (!ReadDatDataToBuffer(strDatFilePath, pDatFileDataBuffer, dwDatFileDataSize)) {
         SetErrorCode(__ERROR_CODE_OPEN_DAT_FILE_FAILED);
@@ -252,9 +247,6 @@ ERROR_HANDLE:
 // 成功返回非0,否则失败,并会设置错误信息
 UINT CBulidServer::FindStructDataOffset(PVOID pStructPointer, INT iStructPointerSize, PCHAR &pDatBuffer, DWORD &dwDatBufferSize)
 {
-    // 转换结构指针
-    //struct Server_Data *pStructData = (struct Server_Data *)pStructPointer;
-
     // 结构数据在Dat数据中的位置
     UINT uOffset = 0, n = 0;
 

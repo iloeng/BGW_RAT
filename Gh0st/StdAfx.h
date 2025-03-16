@@ -10,6 +10,10 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#ifdef _DEBUG
+#include "vld.h"
+#endif
+
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
 #include <afxwin.h>         // MFC core and standard components
@@ -114,7 +118,8 @@ typedef struct {
     DWORD	dwSizeHigh;
     DWORD	dwSizeLow;
 } FILESIZE;
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#define SAFE_DELETE(p) if(p){ delete(p);(p)=NULL;}
+#define SAFE_DELETE_ARRAY(p) if(p){ delete[](p);(p)=NULL;}
 
 #endif // !defined(AFX_STDAFX_H__CF5847E1_BF32_466B_B654_43877EB562DA__INCLUDED_)

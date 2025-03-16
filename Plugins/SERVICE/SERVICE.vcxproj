@@ -24,7 +24,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
@@ -127,6 +127,9 @@ ucrtd.lib;msvcrtd.lib;libcmtd.lib;%(AdditionalDependencies)</AdditionalDependenc
       <LinkDLL>true</LinkDLL>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)third-party\generate_array.ps1" -InputFile "$(TargetPath)" -OutputFile "$(SolutionDir)Gh0st\Plugins\C_$(ProjectName).h" -ArrayName "$(ProjectName)MyFileBuf"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Server\Buffer.cpp" />

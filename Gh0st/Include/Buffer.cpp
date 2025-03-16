@@ -149,7 +149,6 @@ UINT CBuffer::Read(PBYTE pData, UINT nSize)
     if (nSize > GetBufferLen())
         nSize = GetBufferLen();
 
-
     if (nSize) {
         // Copy over required amount and its not up to us
         // to terminate the buffer - got that!!!
@@ -247,7 +246,6 @@ UINT CBuffer::ReAllocateBuffer(UINT nRequestedSize)
 
     if (m_pBase)
         VirtualFree(m_pBase,0,MEM_RELEASE);
-
 
     // Hand over the pointer
     m_pBase = pNewBuffer;
@@ -363,8 +361,6 @@ void CBuffer::ClearBuffer()
 
     m_pPtr = m_pBase = NULL;
     m_nSize = 0;
-
-//	DeAllocateBuffer(1024);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

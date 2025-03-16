@@ -9,6 +9,36 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+class DllCode
+{
+private:
+    BYTE Command;
+    LPBYTE Data;
+    int Reserved;
+    int Size;
+public:
+    DllCode(BYTE command, LPBYTE data, int size, int reserved=0) {
+        Command = command;
+        Reserved = reserved;
+        Size = size + 1 + reserved;
+        Data = new BYTE[Size];
+        Data[0] = Command;
+        memset(Data + 1, 0, reserved);
+        memcpy(Data + 1 + reserved, data, size);
+    }
+    const PBYTE Code() const{
+        return Data;
+    }
+    int Length() const {
+        return Size;
+    }
+    void SetReserved(const void* data) {
+        memcpy(Data+1, data, Reserved);
+    }
+};
+
+typedef DllCode* PDllCode;
+
 class CMainFrame : public CXTPFrameWnd
 {
 
@@ -25,7 +55,8 @@ public:
     static void ProcessReceiveComplete(ClientContext *pContext);
     static void ProcessReceive(ClientContext *pContext);
     void ShowToolTips(LPCTSTR lpszText);
-    CXTPDockingPane* CreatePane(int x, int y, CRuntimeClass* pNewViewClass, CString strFormat, XTPDockingPaneDirection direction, CXTPDockingPane* pNeighbour = NULL);
+    CXTPDockingPane* CreatePane(int x, int y, CRuntimeClass* pNewViewClass, CString strFormat, 
+        XTPDockingPaneDirection direction, CXTPDockingPane* pNeighbour = NULL);
     CMap<UINT,UINT, CWnd*, CWnd*> m_mapPanes;
 
 // Operations

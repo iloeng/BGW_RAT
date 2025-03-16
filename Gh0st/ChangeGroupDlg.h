@@ -6,6 +6,7 @@
 #endif // _MSC_VER > 1000
 // ChangeGroupDlg.h : header file
 //
+#include "StdAfx.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CChangeGroupDlg dialog

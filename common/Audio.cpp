@@ -63,7 +63,6 @@ CAudio::~CAudio()
         waveOutClose(m_hWaveOut);
     }
 
-
     for (int i = 0; i < 2; i++) {
         delete [] m_lpInAudioData[i];
         delete m_lpInAudioHdr[i];
@@ -97,7 +96,6 @@ bool CAudio::playBuffer(LPBYTE lpWaveBuffer, DWORD dwBytes)
 {
     if (!m_bIsWaveOutUsed && !InitializeWaveOut())
         return NULL;
-
 
     for (DWORD i = 0; i < dwBytes; i += m_nBufferLength) {
         memcpy(m_lpOutAudioData[m_nWaveOutIndex], lpWaveBuffer, m_nBufferLength);
@@ -143,7 +141,6 @@ bool CAudio::InitializeWaveIn()
     m_bIsWaveInUsed = true;
 
     return true;
-
 }
 
 int FindMixernIndex(char *szPname)

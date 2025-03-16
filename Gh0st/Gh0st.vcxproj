@@ -44,13 +44,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir)Common;$(ProjectDir)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(SolutionDir);$(SolutionDir)Common;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir)Common;$(ProjectDir)Include;$(VLDPATH)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(SolutionDir);$(SolutionDir)Common;$(VLDPATH)\lib\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir)Common;$(ProjectDir)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(SolutionDir);$(SolutionDir)Common;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\github\XTToolkitPro\Source;$(ProjectDir);$(SolutionDir)Common;$(ProjectDir)Include;$(VLDPATH)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\github\XTToolkitPro\lib\vc160;$(SolutionDir);$(SolutionDir)Common;$(VLDPATH)\lib\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -63,7 +63,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
       <AdditionalOptions> /Zm1000 </AdditionalOptions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Midl>
@@ -170,10 +170,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /Zm1000   /Zm1000 </AdditionalOptions>
     </ClCompile>
     <ClCompile Include="Dib.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Zm1000   /Zm1000 </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /Zm1000   /Zm1000 </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="Digistatic.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /Zm1000   /Zm1000 </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /Zm1000   /Zm1000 </AdditionalOptions>
     </ClCompile>
@@ -382,7 +378,6 @@
     <ClInclude Include="DataStatus.h" />
     <ClInclude Include="decode.h" />
     <ClInclude Include="Dib.h" />
-    <ClInclude Include="Digistatic.h" />
     <ClInclude Include="FileManagerDlg.h" />
     <ClInclude Include="FileTransferModeDlg.h" />
     <ClInclude Include="Gh0st.h" />

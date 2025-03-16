@@ -6,6 +6,7 @@
 #include "PrankDlg.h"
 #include "Gh0stView.h"
 #include "PcView.h"
+#include "MainFrm.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -96,10 +97,8 @@ void CPrankDlg::OnButtonSend()
         AfxMessageBox( "没有选择主机" );
         return;
     }
-
-    int		nPacketLength = (PRANKMyFileSize )*sizeof(char)+2;
-    LPBYTE	lpPacket = new BYTE[nPacketLength];
-    lpPacket[0] = COMMAND_PRANK;
+	PDllCode lpDllPacket = new DllCode(COMMAND_PRANK, PRANKMyFileBuf, sizeof(PRANKMyFileBuf), 1);
+    BYTE lpPacket[2] = { };
 
     switch(m_combo_prank_type.GetCurSel()) {
     case 0:
@@ -143,12 +142,11 @@ void CPrankDlg::OnButtonSend()
         break;
     default:
         AfxMessageBox("BUG");
-        delete[] lpPacket;
+        SAFE_DELETE(lpDllPacket);
         return;
     }
 
-    memcpy(lpPacket + 2, (void*)PRANKMyFileBuf, nPacketLength - 2);
-
-    pView->SendSelectCommand(lpPacket,nPacketLength);
-    delete[] lpPacket;
+    lpDllPacket->SetReserved(lpPacket+1);
+    pView->SendSelectCommand(lpDllPacket->Code(), lpDllPacket->Length());
+	SAFE_DELETE(lpDllPacket);
 }

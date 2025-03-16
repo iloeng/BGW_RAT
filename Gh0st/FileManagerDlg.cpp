@@ -168,7 +168,6 @@ BEGIN_MESSAGE_MAP(CFileManagerDlg, CDialog)
 
     ON_BN_CLICKED(ID_SEARCH_SUBFOLDER, OnCheckSubfolder)
 
-
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -326,7 +325,6 @@ BOOL CFileManagerDlg::OnInitDialog()
     m_headerS.SubclassWindow(hWndHeader);
     m_headerS.SetTheme(xtpControlThemeOffice2003);
 
-
     // 显示驱动器列表
     FixedLocalDriveList();
     FixedRemoteDriveList();
@@ -381,7 +379,6 @@ void CFileManagerDlg::OnSize(UINT nType, int cx, int cy)
     m_ProgressCtrl->MoveWindow(&rect);
 
 
-
     GetDlgItem(IDC_LIST_LOCAL)->MoveWindow(0, 36, cx, (cy - 130) / 2);
     GetDlgItem(IDC_LIST_REMOTE)->MoveWindow(0, (cy / 2) + 12, cx, (cy - 130) / 2);
     GetDlgItem(IDC_LIST_REMOTE_SEARCH)->MoveWindow(0, (cy / 2) + 12, cx, (cy - 130) / 2);
@@ -425,7 +422,6 @@ void CFileManagerDlg::FixedLocalDriveList()
             AmntMB = 0;
             FreeMB = 0;
         }
-
 
         int	nIconIndex = -1;
 
@@ -514,7 +510,6 @@ void CFileManagerDlg::FixedLocalFileList(CString directory)
         if(m_Local_Path.Right(1) != "\\")
             m_Local_Path += "\\";
     }
-
 
     // 是驱动器的根目录,返回磁盘列表
     if (m_Local_Path.GetLength() == 0) {
@@ -819,7 +814,6 @@ BOOL CFileManagerDlg::PreTranslateMessage(MSG* pMsg)
             }
             return TRUE;
         }
-
     }
     // 单击除了窗口标题栏以外的区域使窗口移动
     if (pMsg->message == WM_LBUTTONDOWN && pMsg->hwnd == m_hWnd) {
@@ -894,23 +888,10 @@ void CFileManagerDlg::FixedRemoteDriveList()
 
         i += 10;
 
-//		char	*lpFileSystemName = NULL;
         char	*lpTypeName = NULL;
 
         lpTypeName = pDrive + i;
-//		i += lstrlen(pDrive + i) + 1;
-//		lpFileSystemName = pDrive + i;
-
-        // 磁盘类型, 为空就显示磁盘名称
-// 		if (lstrlen(lpFileSystemName) == 0)
-// 		{
         m_list_remote.SetItemText(nItem, 1, lpTypeName);
-// 		}
-// 		else
-// 		{
-// 			m_list_remote.SetItemText(nItem, 1, lpFileSystemName);
-// 		}
-
 
         i += lstrlen(pDrive + i) + 1;
     }
@@ -920,7 +901,6 @@ void CFileManagerDlg::FixedRemoteDriveList()
 
     strShowText.Format(_T("远程: 装载目录 %s 完成"), m_Remote_Path);
     PostMessage(WM_SHOW_MSG,0,0);
-//	ShowMessage(_T("远程: 装载目录 %s 完成"), m_Remote_Path);
 }
 
 void CFileManagerDlg::OnClose()
@@ -1087,7 +1067,6 @@ void CFileManagerDlg::FixedRemoteFileList(BYTE *pbBuffer, DWORD dwBufferLen)
 
     strShowText.Format(_T("远程: 装载目录 %s 完成"), m_Remote_Path);
     PostMessage(WM_SHOW_MSG,0,0);
-//	ShowMessage(_T("远程: 装载目录 %s 完成"), m_Remote_Path);
 }
 
 // 显示消息
@@ -1130,19 +1109,6 @@ LRESULT CFileManagerDlg::OnShowDlg(WPARAM wParam, LPARAM lParam)
     }
     return S_OK;
 }
-
-// void CFileManagerDlg::ShowMessage(char *lpFmt, ...)
-// {
-// 	char buff[1024];
-//     va_list    arglist;
-//     va_start( arglist, lpFmt );
-//
-// 	memset(buff, 0, sizeof(buff));
-//
-// 	vsprintf(buff, lpFmt, arglist);
-// 	m_wndStatusBar.SetPaneText(0, buff);
-//     va_end( arglist );
-// }
 
 //////////////////////////////////以下为工具栏响应处理//////////////////////////////////////////
 void CFileManagerDlg::OnLocalList()
@@ -1642,10 +1608,8 @@ void CFileManagerDlg::CreateLocalRecvFile()
     // 创建多层目录
     MakeSureDirectoryPathExists(m_strReceiveLocalFile.GetBuffer(0));
 
-
     WIN32_FIND_DATA FindFileData;
     HANDLE hFind = FindFirstFile(m_strReceiveLocalFile.GetBuffer(0), &FindFileData);
-
 
     if (hFind != INVALID_HANDLE_VALUE
         && m_nTransferMode != TRANSFER_MODE_OVERWRITE_ALL
@@ -1769,7 +1733,6 @@ void CFileManagerDlg::WriteLocalRecvFile()
     LONG	dwOffsetHigh = pFileSize->dwSizeHigh;
     LONG	dwOffsetLow = pFileSize->dwSizeLow;
 
-
     dwBytesToWrite = m_pContext->m_DeCompressionBuffer.GetBufferLen() - nHeadLength;
 
     HANDLE	hFile =
@@ -1840,7 +1803,6 @@ void CFileManagerDlg::EndLocalRecvFile()
 
         strShowText.Format(_T("本地: 装载目录 %s \\ *. * 完成"), m_Local_Path);
         PostMessage(WM_SHOW_MSG,0,0);
-//		ShowMessage(_T("本地: 装载目录 %s \\ *. * 完成"), m_Local_Path);
     } else {
         // 我靠，不sleep下会出错，服了可能以前的数据还没send出去
         Sleep(5);
@@ -1848,6 +1810,7 @@ void CFileManagerDlg::EndLocalRecvFile()
     }
     return;
 }
+
 // 终止本地上传文件
 void CFileManagerDlg::EndLocalUploadFile()
 {
@@ -1863,7 +1826,6 @@ void CFileManagerDlg::EndLocalUploadFile()
         m_ProgressCtrl->SetWindowText("");
         strShowText.Format(_T("远程：装载目录 %s\\*.* 完成"), m_Remote_Path);
         PostMessage(WM_SHOW_MSG,0,0);
-        //ShowMessage(_T("远程：装载目录 %s\\*.* 完成"), m_Remote_Path);
     } else {
         // 我靠，不sleep下会出错，服了可能以前的数据还没send出去
         Sleep(5);
@@ -1871,6 +1833,7 @@ void CFileManagerDlg::EndLocalUploadFile()
     }
     return;
 }
+
 // 终止远程删除文件
 void CFileManagerDlg::EndRemoteDeleteFile()
 {
@@ -1882,8 +1845,6 @@ void CFileManagerDlg::EndRemoteDeleteFile()
             return;
 
         GetRemoteFileList(".");
-
-        //ShowMessage(_T("远程：装载目录 %s\\*.* 完成"), m_Remote_Path);
     } else {
         // 我靠，不sleep下会出错，服了可能以前的数据还没send出去
         Sleep(5);
@@ -1902,8 +1863,6 @@ void CFileManagerDlg::EndRemoteMoveFile()
             return;
 
         GetRemoteFileList(".");
-
-        //ShowMessage(_T("远程：装载目录 %s\\*.* 完成"), m_Remote_Path);
     } else {
         // 我靠，不sleep下会出错，服了可能以前的数据还没send出去
         Sleep(5);
@@ -2407,9 +2366,7 @@ void CFileManagerDlg::OnRclickListLocal(NMHDR* pNMHDR, LRESULT* pResult)
     } else
         pM->EnableMenuItem(IDM_LOCAL_OPEN, MF_BYCOMMAND | MF_GRAYED);
 
-
     pM->EnableMenuItem(IDM_REFRESH, MF_BYCOMMAND | MF_ENABLED);
-
 
     CXTPCommandBars::TrackPopupMenu(pM, 0, p.x, p.y,this);
 
@@ -2456,7 +2413,6 @@ void CFileManagerDlg::OnRclickListRemote(NMHDR* pNMHDR, LRESULT* pResult)
     pM->EnableMenuItem(9, MF_BYPOSITION | MF_ENABLED);
     pM->EnableMenuItem(10, MF_BYPOSITION | MF_ENABLED);
 
-//	if(!m_Remote_Move_Job.IsEmpty() && !m_list_remote_search.IsWindowVisible())
     pM->EnableMenuItem(11, MF_BYPOSITION | MF_ENABLED);
 
     CXTPCommandBars::TrackPopupMenu(pM, 0, p.x, p.y,this);
@@ -2484,7 +2440,6 @@ void CFileManagerDlg::OnRclickListRemoteSearch(NMHDR* pNMHDR, LRESULT* pResult)
             pM->EnableMenuItem(i, MF_BYPOSITION | MF_GRAYED);
         }
     }
-
 
     // 禁用重命名 新建文件夹 菜单
     pM->EnableMenuItem(IDM_RENAME, MF_BYCOMMAND | MF_GRAYED);
@@ -2634,7 +2589,6 @@ int CFileManagerDlg::OnCreateControl(LPCREATECONTROLSTRUCT lpCreateControl)
         return TRUE;
     }
 
-
     if (lpCreateControl->nID == ID_SEARCH_SUBFOLDER) {
         CXTPControlButton* pControl = new CXTPControlCheckBox();
         pControl->SetFlags(xtpFlagRightAlign);
@@ -2642,7 +2596,6 @@ int CFileManagerDlg::OnCreateControl(LPCREATECONTROLSTRUCT lpCreateControl)
         lpCreateControl->pControl = pControl;
         return TRUE;
     }
-
 
     return FALSE;
 }

@@ -1,4 +1,4 @@
-
+#define USING_SKINH 0 // 是否使用皮肤库
 
 #include "stdafx.h"
 #include "Gh0st.h"
@@ -7,8 +7,10 @@
 #include "Gh0stDoc.h"
 #include "Gh0stView.h"
 //#include "Login.h"
+#if USING_SKINH
 #include "SkinH.h"
 #pragma comment(lib, "SkinH.lib")
+#endif
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -137,7 +139,7 @@ BOOL GetNtVersionNumbers(DWORD&dwMajorVer, DWORD& dwMinorVer,DWORD& dwBuildNumbe
 }
 BOOL CGh0stApp::InitInstance()
 {
-
+#if USING_SKINH
     //***********加皮肤******************//
     HGLOBAL hRes;
     HRSRC hResInfo;
@@ -152,6 +154,7 @@ BOOL CGh0stApp::InitInstance()
         }
     }
     //*******************************************//
+#endif
 
 
     SetUnhandledExceptionFilter(bad_exception);

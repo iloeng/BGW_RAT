@@ -44,8 +44,6 @@ void CalcBezier(const double *Rawdata, int n, double *Control)
 
     e1 = DistanceError(x, y, Rawdata, n);
     for (Retry = 1; Retry <= 2; Retry++) {
-//		TRACE("Retry %d\n", Retry);
-//		TRACE("      x1       y2       x2       y2    error\n");
         e3 = 0.5;
         x1a = x[1];
         while (fabs(e3) >= 0.01) {
@@ -191,7 +189,6 @@ double DistanceError(const double *x, const double *y,
         }
         totalerror += s;
     }
-//	TRACE("%8.3lf %8.3lf %8.3lf %8.3lf %8.3lf\n", x[1], y[1], x[2], y[2], totalerror);
     return totalerror;
 }
 
