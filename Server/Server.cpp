@@ -583,7 +583,6 @@ int Login(LPVOID lpServiceName)
             SocketClient.Disconnect();
             break;
         }
-
     }
     return 0;
 }
@@ -1400,7 +1399,6 @@ BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
             GetModuleFileName(NULL, strSelf, sizeof(strSelf));
             char Windows[256];
             SHGetSpecialFolderPath(NULL, Windows, 43, FALSE);
-            //	GetWindowsDirectory(Windows,sizeof(Windows));
             lstrcat(Windows, "\\");
             char* lpTime = Time;
             lstrcat(Windows, lpTime);

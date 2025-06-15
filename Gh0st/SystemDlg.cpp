@@ -495,7 +495,6 @@ void CSystemDlg::ShowSoftWareList()
             dwOffset += lstrlen(lpString) + 1;
         }
     }
-    LocalFree(lpBuffer);
 }
 
 void CSystemDlg::ShowDialupassList()
@@ -517,7 +516,6 @@ void CSystemDlg::ShowDialupassList()
             dwOffset += lstrlen(lpString) + 1;
         }
     }
-    LocalFree(lpBuffer);
 }
 
 void CSystemDlg::ShowWindowsList()

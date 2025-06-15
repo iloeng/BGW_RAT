@@ -26,7 +26,6 @@ CScreenManager::CScreenManager(CClientSocket *pClient):CManager(pClient)
 
     m_hWorkThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)WorkThread, this, 0, NULL, true);
     m_hCtrlThread = MyCreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CtrlThread, this, 0, NULL, true);
-//	SetThreadPriority(m_hWorkThread, THREAD_PRIORITY_TIME_CRITICAL);
 }
 
 CScreenManager::~CScreenManager()

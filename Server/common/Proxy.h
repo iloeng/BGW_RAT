@@ -162,7 +162,6 @@ BOOL SendRequest(SOCKET* CSsocket, char *SenderBuf, char *ReceiveBuf, int DataLe
     //CSsocket[1] ServerSocket
     DWORD  dwThreadID;
     char   HostName[MAX_HOSTNAME] = {0};
-    char   ReqInfo1[8],ReqInfo2[248];
     UINT   RemotePort = 0;
     static int t=0;
     EnterCriticalSection(&cs);
@@ -235,14 +234,11 @@ int Authentication(SOCKET* CSsocket, char *ReceiveBuf,int DataLen)
         int PLen=ReceiveBuf[2+aq->Ulen];
         if((PLen!=0)&&(PLen<=256))
             memcpy(PASS,ReceiveBuf+3+aq->Ulen,PLen);
-        //printf("USER %s\nPASS %s\n",USER,PASS);
         //0=login successfully,0xFF=failure;
         if(!strcmp(Username,USER) && !strcmp(Password,PASS)) {
             ReceiveBuf[1]=0x00;
-            //printf("Socks5 Authentication Passed\n");
         } else {
             ReceiveBuf[1]=0xFF;
-            //printf("Invalid Password\n");
         }
         if(send(CSsocket[0],ReceiveBuf,2,0) == SOCKET_ERROR)
             return 0;

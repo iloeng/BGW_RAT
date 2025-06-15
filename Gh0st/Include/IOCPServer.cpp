@@ -825,7 +825,6 @@ bool CIOCPServer::OnClientInitializing(ClientContext* pContext, DWORD dwIoSize)
 
 bool CIOCPServer::OnClientReading(ClientContext* pContext, DWORD dwIoSize)
 {
-    CLock cs(CIOCPServer::m_cs, "OnClientReading");
     try {
         //////////////////////////////////////////////////////////////////////////
         static DWORD nLastTick = GetTickCount();

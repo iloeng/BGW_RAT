@@ -11,6 +11,36 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#if 0
+#define WriteBitmap(x1,x2,x3,x4) 
+#else
+// 将内存中的位图写入文件
+bool WriteBitmap(LPBITMAPINFO bmpInfo, const void* bmpData, const std::string& filePrefix, int index = -1) {
+	char path[_MAX_PATH];
+	if (filePrefix.size() >= 4 && filePrefix.substr(filePrefix.size() - 4) == ".bmp") {
+		strcpy_s(path, filePrefix.c_str());
+	}
+	else {
+		sprintf_s(path, ".\\bmp\\%s_%d.bmp", filePrefix.c_str(), index == -1 ? clock() : index);
+	}
+	FILE* File = fopen(path, "wb");
+	if (File) {
+		BITMAPFILEHEADER fileHeader = { 0 };
+		fileHeader.bfType = 0x4D42; // "BM"
+		fileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bmpInfo->bmiHeader.biSizeImage;
+		fileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+		fwrite(&fileHeader, 1, sizeof(BITMAPFILEHEADER), File);
+		fwrite(&bmpInfo->bmiHeader, 1, sizeof(BITMAPINFOHEADER), File);
+		fwrite(bmpData, 1, bmpInfo->bmiHeader.biSizeImage, File);
+		fclose(File);
+		return true;
+	}
+	return false;
+}
+#endif
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CScreenSpyDlg dialog
 enum {
@@ -131,11 +161,13 @@ void CScreenSpyDlg::OnReceiveComplete()
     case TOKEN_FIRSTSCREEN:
         DrawFirstScreen();
         break;
-    case TOKEN_NEXTSCREEN:
-        if (m_pContext->m_DeCompressionBuffer.GetBuffer(0)[1] == ALGORITHM_SCAN)
+    case TOKEN_NEXTSCREEN: {
+        BYTE algo = m_pContext->m_DeCompressionBuffer.GetBuffer(0)[1];
+        if (algo == ALGORITHM_SCAN)
             DrawNextScreenRect();
         else
             DrawNextScreenDiff();
+    }
         break;
     case TOKEN_BITMAPINFO:
         ResetScreen();
@@ -291,28 +323,6 @@ BOOL CScreenSpyDlg::OnInitDialog()
     // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-// void CScreenSpyDlg::FullScreen()
-// {
-// 	m_bIsFullScreen = !m_bIsFullScreen; // 设置全屏显示标志
-// 	//一种更好的全屏显示
-// 	LONG style = ::GetWindowLong(this->m_hWnd,GWL_STYLE);
-// 	if(m_bIsFullScreen)//全屏显示
-// 	{
-// 		style &= ~(WS_DLGFRAME | WS_THICKFRAME);
-// 		SetWindowLong(this->m_hWnd, GWL_STYLE, style);
-// 		//this->ShowWindow(SW_SHOWMAXIMIZED);
-// 		CRect rect;
-// 		this->GetWindowRect(&rect);
-// 		::SetWindowPos(this->m_hWnd,HWND_NOTOPMOST,rect.left-1, rect.top-1, rect.right-rect.left + 3, rect.bottom-rect.top + 3, SWP_FRAMECHANGED);
-// 	}
-// 	else
-// 	{
-// 		style |= WS_DLGFRAME | WS_THICKFRAME;
-// 		SetWindowLong(this->m_hWnd, GWL_STYLE, style);
-// 		this->ShowWindow(SW_NORMAL);
-// 	}
-// }
-
 void CScreenSpyDlg::ResetScreen()
 {
     UINT	nBISize = m_pContext->m_DeCompressionBuffer.GetBufferLen() - 1;
@@ -409,7 +419,6 @@ void CScreenSpyDlg::DrawNextScreenDiff()
     }
 
     if (bIsReDraw) 	PostMessage(WM_PAINT);
-
 }
 
 void CScreenSpyDlg::DrawNextScreenRect()
@@ -421,7 +430,6 @@ void CScreenSpyDlg::DrawNextScreenRect()
     LPVOID	lpNextScreen = m_pContext->m_DeCompressionBuffer.GetBuffer(nHeadLength);
     DWORD	dwBytes = m_pContext->m_DeCompressionBuffer.GetBufferLen() - nHeadLength;
 
-
     // 保存上次鼠标所在的位置
     RECT	rectOldPoint;
     ::SetRect(&rectOldPoint, m_RemoteCursorPos.x, m_RemoteCursorPos.y,
@@ -431,8 +439,7 @@ void CScreenSpyDlg::DrawNextScreenRect()
 
     //////////////////////////////////////////////////////////////////////////
     // 判断鼠标是否移动
-    if ((rectOldPoint.left != m_RemoteCursorPos.x) || (rectOldPoint.top !=
-            m_RemoteCursorPos.y))
+    if ((rectOldPoint.left != m_RemoteCursorPos.x) || (rectOldPoint.top != m_RemoteCursorPos.y))
         bIsReDraw = true;
 
     // 光标类型发生变化
@@ -446,17 +453,6 @@ void CScreenSpyDlg::DrawNextScreenRect()
 
     // 判断鼠标所在区域是否发生变化
     DWORD	dwOffset = 0;
-    while (dwOffset < dwBytes && !bIsReDraw) {
-        LPRECT	lpRect = (LPRECT)((LPBYTE)lpNextScreen + dwOffset);
-        RECT rectDest;
-        if (IntersectRect(&rectDest, &rectOldPoint, lpRect))
-            bIsReDraw = true;
-        dwOffset += sizeof(RECT) + m_lpbmi_rect->bmiHeader.biSizeImage;
-    }
-    bIsReDraw = bIsReDraw && m_bIsTraceCursor;
-    //////////////////////////////////////////////////////////////////////////
-
-    dwOffset = 0;
     while (dwOffset < dwBytes) {
         LPRECT	lpRect = (LPRECT)((LPBYTE)lpNextScreen + dwOffset);
         int	nRectWidth = lpRect->right - lpRect->left;
@@ -479,6 +475,11 @@ void CScreenSpyDlg::DrawNextScreenRect()
 
         dwOffset += sizeof(RECT) + m_lpbmi_rect->bmiHeader.biSizeImage;
     }
+
+#ifdef _DEBUG
+    static int num = 0;
+	if ((++num % 20) == 0) TRACE("%d: dwBytes = %d Paint: %s\n", num, dwBytes+ nHeadLength, bIsReDraw ? "true":"false");
+#endif
 
     if (bIsReDraw)
         PostMessage(WM_PAINT);
@@ -630,8 +631,6 @@ void  CScreenSpyDlg::OnSysCommand(UINT nID, LPARAM lParam)
             ::SetTimer(m_hWnd,132,250,NULL);
             pSysMenu->CheckMenuItem(IDM_SAVEAVI_S, MF_CHECKED);
         }
-
-
     }
     break;
     case IDM_GET_CLIPBOARD: { // 获取剪贴板
@@ -692,6 +691,7 @@ void  CScreenSpyDlg::OnSysCommand(UINT nID, LPARAM lParam)
         CDialog::OnSysCommand(nID, lParam);
     }
 }
+
 LRESULT	CScreenSpyDlg::OnGetMiniMaxInfo(WPARAM wParam, LPARAM lparam)
 {
     // 如果m_MMI已经被赋值
@@ -734,7 +734,6 @@ void CScreenSpyDlg::InitMMI()
     int	nMinHeight = 300 + nHeightAdd;
     int	nMaxWidth = m_lpbmi->bmiHeader.biWidth + nWidthAdd;
     int	nMaxHeight = m_lpbmi->bmiHeader.biHeight + nHeightAdd;
-
 
     // 最小的Track尺寸
     m_MMI.ptMinTrackSize.x = nMinWidth;
@@ -887,7 +886,6 @@ void CScreenSpyDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
     i = max(i, si.nMin);
     i = min(i, (int)(si.nMax - si.nPage + 1));
-
 
     RECT rect;
     GetClientRect(&rect);

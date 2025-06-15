@@ -41,7 +41,6 @@ unsigned char* MyEncode(unsigned char* data, int len)
 
 CClientSocket::CClientSocket()
 {
-
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
 
@@ -51,12 +50,10 @@ CClientSocket::CClientSocket()
     // Packet Flag;
     BYTE bPacketFlag[] = {'x', 'y', ' '};
     memcpy(m_bPacketFlag, bPacketFlag, sizeof(bPacketFlag));
-
 }
 
 CClientSocket::~CClientSocket()
 {
-
     m_bIsRunning = false;
     WaitForSingleObject(m_hWorkerThread, INFINITE);
 
@@ -67,12 +64,10 @@ CClientSocket::~CClientSocket()
     CloseHandle(m_hEvent);
 
     WSACleanup();
-
 }
 
 bool CClientSocket::Connect(LPCTSTR lpszHost, UINT nPort)
 {
-
     // 一定要清除一下，不然socket会耗尽系统资源
     Disconnect();
 
@@ -120,6 +115,7 @@ bool CClientSocket::Connect(LPCTSTR lpszHost, UINT nPort)
 
     return true;
 }
+
 /*
 
 char* MyDecode(char *data,int len)
@@ -133,11 +129,8 @@ char* MyDecode(char *data,int len)
 }*/
 
 
-
 DWORD WINAPI CClientSocket::WorkThread(LPVOID lparam)
 {
-
-
     CClientSocket *pThis = (CClientSocket *)lparam;
 
     char	buff[MAX_RECV_BUFFER];
@@ -145,7 +138,6 @@ DWORD WINAPI CClientSocket::WorkThread(LPVOID lparam)
     FD_ZERO(&fdSocket);
     FD_SET(pThis->m_Socket, &fdSocket);
     while (pThis->IsRunning()) {
-
         fd_set fdRead = fdSocket;
         int nRet =  select(NULL, &fdRead, NULL, NULL, NULL);
         if (nRet == SOCKET_ERROR) {
@@ -167,11 +159,7 @@ DWORD WINAPI CClientSocket::WorkThread(LPVOID lparam)
         }
     }
 
-
     return -1;
-
-
-
 }
 
 void CClientSocket::run_event_loop()
@@ -363,7 +351,6 @@ int CClientSocket::SendWithSplit(LPBYTE lpData, UINT nSize, UINT nSplitSize)
         }
         nSend += nRet;
         pbuf += nSplitSize;
-        Sleep(10); // 必要的Sleep,过快会引起控制端数据混乱
     }
     // 发送最后的部分
     if (size > 0) {

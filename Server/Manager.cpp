@@ -42,6 +42,7 @@ void CManager::WaitForDialogOpen()
     // 必须的Sleep,因为远程窗口从InitDialog中发送COMMAND_NEXT到显示还要一段时间
     Sleep(150);
 }
+
 void CManager::NotifyDialogIsOpen()
 {
     SetEvent(m_hEventDlgOpen);

